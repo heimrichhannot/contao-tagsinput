@@ -1,0 +1,50 @@
+.bootstrap-tagsinput {
+    width: 100%;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 2px 3px 0;
+    line-height: 20px;
+}
+
+.bootstrap-tagsinput .label {
+    display: inline;
+    padding: .3em .4em .3em;
+    font-size: .7rem;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    float: left;
+    margin-bottom: 3px;
+}
+
+.bootstrap-tagsinput .label-info {
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    color: #555;
+    text-shadow: 1px 1px 0 #eee;
+    background: #eee;
+    background-image: -moz-linear-gradient(bottom, #ccc 0, #eee 60%);
+    background-image: -webkit-linear-gradient(bottom, #ccc 0, #eee 60%);
+    background-image: -o-linear-gradient(bottom, #ccc 0, #eee 60%);
+    background-image: -ms-linear-gradient(bottom, #ccc 0, #eee 60%);
+    background-image: linear-gradient(to top, #ccc 0, #eee 60%);
+}
+
+.bootstrap-tagsinput .label-info[href]:hover,
+.bootstrap-tagsinput .label-info[href]:focus {
+    background-color: #31b0d5;
+}
+
+.bootstrap-tagsinput .label-info.new{
+    background: #f0ad4e none;
+    border-color: #f0ad4e;
+    color: #fff;
+    text-shadow: none;
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+    content: '\00D7';
+}

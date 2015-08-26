@@ -1,0 +1,31 @@
+.bootstrap-tagsinput {
+    width: 100%;
+}
+
+.bootstrap-tagsinput .label {
+    display: inline;
+    padding: .3em .4em .3em;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    float: left;
+    margin-bottom: 3px;
+}
+
+.bootstrap-tagsinput .label-info {
+}
+
+.bootstrap-tagsinput .label-info[href]:hover,
+.bootstrap-tagsinput .label-info[href]:focus {
+    background-color: #31b0d5;
+}
+
+.bootstrap-tagsinput .label-info.new{
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+    content: '\00D7';
+}
