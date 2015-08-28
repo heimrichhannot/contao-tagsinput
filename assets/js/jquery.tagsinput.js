@@ -64,7 +64,11 @@
 
                 // leaving input -> clear
                 $select.tagsinput('input').on('blur', function (e) {
-                    this.value = '';
+					// add only if value is not empty
+					if (this.value != '' && $select.data('free-input')) {
+						$select.tagsinput('add', {label: this.value});
+						this.value = '';
+					}
                 });
 
             });
