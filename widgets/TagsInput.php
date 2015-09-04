@@ -135,6 +135,9 @@ class TagsInput extends \Widget
 		foreach($varValue as $key => $strTag)
 		{
 			$blnFound = false;
+			
+			// convert html entities back, otherwise compare for html entities will fail and tag never added
+			$strTag = \Input::decodeEntities($strTag);
 
 			foreach ($this->arrOptions as $v)
 			{
