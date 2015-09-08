@@ -12,7 +12,8 @@
 
             $tagInputs.each(function () {
 
-                var $select = $(this);
+                var $select = $(this),
+                    placeholder = $select.data('placeholder');
 
                 var options = new Bloodhound({
                     local: $select.data('items'),
@@ -39,7 +40,12 @@
                     }
                 });
 
-                $select.tagsinput('input').attr('placeholder', $select.data('placeholder'));
+                if(placeholder.length > 0){
+                    $select.tagsinput('input').attr('placeholder', placeholder);
+                }
+
+                // store tt-hint width to adjust tt-input after typing, adding and leaving field
+                var hintWidth = $select.tagsinput('input').width();
 
                 // restore from selected options
                 $select.find('option:selected').each(function () {
@@ -67,8 +73,22 @@
 					// add only if value is not empty
 					if (this.value != '' && $select.data('free-input')) {
 						$select.tagsinput('add', {label: this.value});
-						this.value = '';
 					}
+
+                    this.value = '';
+
+                    // restore tt-input width
+                    if(placeholder.length > 0){
+                        $select.tagsinput('input').width(hintWidth);
+                    }
+
+                });
+
+                $select.on('itemAdded', function(event) {
+                    // restore tt-input width after adding item
+                    if(placeholder.length > 0){
+                        $select.tagsinput('input').width(hintWidth);
+                    }
                 });
 
             });

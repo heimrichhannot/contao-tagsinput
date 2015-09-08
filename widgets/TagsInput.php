@@ -105,11 +105,14 @@ class TagsInput extends \Widget
 
 		if(!empty($varInput))
 		{
+			// remove duplicates
+			$varInput = array_unique($varInput);
+
 			$varInput = $this->addValuesFromOptions($varInput);
 
 			if(!$this->isValidOption($varInput))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalid'], (is_array($varValue) ? implode(', ', $varValue) : $varValue)));
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalid'], (is_array($varInput) ? implode(', ', $varInput) : $varInput)));
 			}
 		}
 
@@ -152,6 +155,7 @@ class TagsInput extends \Widget
 					}
 				}
 			}
+			
 
 			if(!$blnFound && ($intId = $this->addNewTag($strTag)) > 0)
 			{
