@@ -213,6 +213,8 @@ class TagsInput extends \Widget
 
 	protected function prepare()
 	{
+		$this->addCssFiles();
+
 		if ($this->multiple !== false) {
 			$this->addAttribute('multiple', true);
 			$this->strName .= '[]';
@@ -294,6 +296,20 @@ class TagsInput extends \Widget
 			implode('', $this->arrSelectedOptions),
 			$this->wizard
 		);
+	}
+
+	protected function addCssFiles()
+	{
+		$GLOBALS['TL_CSS']['tagsinput']        = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
+
+		if(TL_MODE == 'BE')
+		{
+			$GLOBALS['TL_CSS']['tagsinput-be']        = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
+			$GLOBALS['TL_CSS']['typeahead-be']        = 'system/modules/tagsinput/assets/css/typeahead-be.css';
+		} else {
+			$GLOBALS['TL_CSS']['tagsinput-fe']        = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css';
+			$GLOBALS['TL_CSS']['typeahead-fe']        = 'system/modules/tagsinput/assets/css/typeahead-fe.css';
+		}
 	}
 
 }
