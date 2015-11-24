@@ -103,6 +103,12 @@ class TagsInput extends \Widget
 		// set values from options instead of label
 		$varInput = $this->getPost($this->strName);
 
+		// support single tags
+		if(!is_array($varInput))
+		{
+			$varInput = array($varInput);
+		}
+
 		if(!empty($varInput))
 		{
 			// remove duplicates
@@ -128,7 +134,7 @@ class TagsInput extends \Widget
 
 	protected function addValuesFromOptions($varValue)
 	{
-		$arrValues = array();
+		$values = array();
 
 		if(!is_array($varValue))
 		{
@@ -138,7 +144,7 @@ class TagsInput extends \Widget
 		foreach($varValue as $key => $strTag)
 		{
 			$blnFound = false;
-			
+
 			// convert html entities back, otherwise compare for html entities will fail and tag never added
 			$strTag = \Input::decodeEntities($strTag);
 
@@ -149,7 +155,14 @@ class TagsInput extends \Widget
 				{
 					if ($strTag == $v['label'])
 					{
-						$arrValues[$key] = $v['value'];
+						if($this->multiple)
+						{
+							$values[$key] = $v['value'];
+						}
+						else{
+							$values = $v['value'];
+						}
+
 						$blnFound = true;
 						break;
 					}
@@ -159,14 +172,20 @@ class TagsInput extends \Widget
 
 			if(!$blnFound && ($intId = $this->addNewTag($strTag)) > 0)
 			{
-				$arrValues[$key] = $intId;
+				if($this->multiple)
+				{
+					$values[$key] = $intId;
+				}
+				else{
+					$values = $intId;
+				}
 
 				// add new value to options
 				$this->arrOptions[] = array('value' => $intId, 'label' => $strTag);
 			}
 		}
 
-		return $arrValues;
+		return $values;
 	}
 
 	/**
@@ -215,9 +234,11 @@ class TagsInput extends \Widget
 	{
 		$this->addCssFiles();
 
-		if ($this->multiple !== false) {
+		if ($this->multiple) {
 			$this->addAttribute('multiple', true);
 			$this->strName .= '[]';
+		} else{
+			$this->addAttribute('data-max-tags', 1);
 		}
 
 		// Add an empty option (XHTML) if there are none

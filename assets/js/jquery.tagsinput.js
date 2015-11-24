@@ -29,10 +29,14 @@
                 $select.tagsinput({
                     itemValue: 'label',
                     itemText: 'label',
+                    maxTags: $select.data('max-tags') ? $select.data('max-tags') : '',
                     typeaheadjs: {
                         name: 'options',
                         displayKey: 'label',
-                        source: options.ttAdapter()
+                        source: options.ttAdapter(),
+                        /* Show Typeahead list on key down, up - TODO: http://twitter.github.io/typeahead.js/examples/#default-suggestions
+                        //minLength: 0,
+                        //highlight: true */
                     },
                     freeInput: $select.data('free-input'),
                     tagClass: function (item) {

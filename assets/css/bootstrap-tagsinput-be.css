@@ -48,3 +48,7 @@
 .bootstrap-tagsinput .tag [data-role="remove"]:after {
     content: '\00D7';
 }
+
+.styled_select.tl_tagsinput{
+    display: none;
+}
