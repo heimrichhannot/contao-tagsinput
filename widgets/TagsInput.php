@@ -241,6 +241,12 @@ class TagsInput extends \Widget
 			$this->addAttribute('data-max-tags', 1);
 		}
 
+		if ($this->submitOnChange)
+		{
+			unset($this->arrAttributes['onchange']);
+			$this->addAttribute('data-submitonchange', true);
+		}
+
 		// Add an empty option (XHTML) if there are none
 		if (empty($this->arrOptions)) {
 			$this->arrOptions = array(array('value' => '', 'label' => '-'));

@@ -77,6 +77,10 @@
                     }
                 });
 
+                $select.on('itemAdded', function (e) {
+                    $select.closest('form').submit();
+                });
+
                 // leaving input -> clear
                 $select.tagsinput('input').on('blur', function (e) {
 					// add only if value is not empty
