@@ -40,7 +40,7 @@
                     }
                 });
 
-                if(placeholder.length > 0){
+                if(typeof placeholder === 'undefined' || placeholder.length > 0){
                     $select.tagsinput('input').attr('placeholder', placeholder);
                 }
 
@@ -66,6 +66,11 @@
 
                         e.preventDefault();
                     }
+
+                    if (e.keyCode == 40)
+                    {
+
+                    }
                 });
 
                 // leaving input -> clear
@@ -78,7 +83,7 @@
                     this.value = '';
 
                     // restore tt-input width
-                    if(placeholder.length > 0){
+                    if(typeof placeholder === 'undefined' || placeholder.length > 0){
                         $select.tagsinput('input').width(hintWidth);
                     }
 
@@ -86,7 +91,7 @@
 
                 $select.on('itemAdded', function(event) {
                     // restore tt-input width after adding item
-                    if(placeholder.length > 0){
+                    if(typeof placeholder === 'undefined' || placeholder.length > 0){
                         $select.tagsinput('input').width(hintWidth);
                     }
                 });
