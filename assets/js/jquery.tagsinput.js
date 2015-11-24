@@ -44,6 +44,8 @@
                     }
                 });
 
+                $select.siblings('.bootstrap-tagsinput').addClass('tl_select');
+
                 if(typeof placeholder === 'undefined' || placeholder.length > 0){
                     $select.tagsinput('input').attr('placeholder', placeholder);
                 }
@@ -77,9 +79,12 @@
                     }
                 });
 
-                $select.on('itemAdded', function (e) {
-                    $select.closest('form').submit();
-                });
+                if ($select.data('submitonchange') == '1')
+                {
+                    $select.on('itemAdded', function (e) {
+                        $select.closest('form').submit();
+                    });
+                }
 
                 // leaving input -> clear
                 $select.tagsinput('input').on('blur', function (e) {
