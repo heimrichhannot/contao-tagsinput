@@ -135,6 +135,7 @@ class TagsInput extends \Widget
 	protected function addValuesFromOptions($varValue)
 	{
 		$values = array();
+		$freeInput = $this->arrConfiguration['freeInput'];
 
 		if(!is_array($varValue))
 		{
@@ -170,18 +171,20 @@ class TagsInput extends \Widget
 			}
 			
 
-			if(!$blnFound && ($intId = $this->addNewTag($strTag)) > 0)
+			if(!$blnFound && ($intId = $this->addNewTag($strTag)) > 0 || $freeInput)
 			{
+				$value = $freeInput ? $strTag : $intId;
+
 				if($this->multiple)
 				{
-					$values[$key] = $intId;
+					$values[$key] = $value;
 				}
 				else{
-					$values = $intId;
+					$values = $value;
 				}
 
 				// add new value to options
-				$this->arrOptions[] = array('value' => $intId, 'label' => $strTag);
+				$this->arrOptions[] = array('value' => $value, 'label' => $strTag);
 			}
 		}
 
