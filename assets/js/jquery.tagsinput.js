@@ -21,7 +21,7 @@
 					postData = $input.data('post-data'),
                     options = {
                         queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('label'),
                         limit: 10
                     },
                     data = $input.data();
@@ -70,6 +70,9 @@
 				{
 					case 'local':
 						options.local = $input.data('items');
+                        options.identify = function(obj){
+                            return obj.value;
+                        }
 						break;
 					case 'remote':
 						options.remote = {
