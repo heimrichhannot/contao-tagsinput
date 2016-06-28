@@ -14,7 +14,6 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 
 1. Store values as array to an field
 
-
 Add the following field syntax to your datacontainer field config and add the field to your palette of choice.
 
 ```

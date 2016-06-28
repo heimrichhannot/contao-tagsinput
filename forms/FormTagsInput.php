@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contao Open Source CMS
  *
@@ -58,7 +59,7 @@ class FormTagsInput extends \TagsInput
 
 		if(!empty($varInput))
 		{
-			$varInput = $this->addValuesFromOptions($varInput);
+			$varInput = $this->setValuesByOptions($varInput);
 			
 			if(!$this->isValidOption($varInput))
 			{

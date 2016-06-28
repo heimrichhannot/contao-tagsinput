@@ -1,0 +1,148 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'i', '-g', 'bower' ]
+2 info using npm@2.15.1
+3 info using node@v0.10.45
+4 verbose node symlink /usr/bin/node
+5 verbose install initial load of /usr/lib/package.json
+6 verbose readDependencies loading dependencies from /usr/lib/package.json
+7 silly cache add args [ 'bower', null ]
+8 verbose cache add spec bower
+9 silly cache add parsed spec { raw: 'bower',
+9 silly cache add   scope: null,
+9 silly cache add   name: 'bower',
+9 silly cache add   rawSpec: '',
+9 silly cache add   spec: 'latest',
+9 silly cache add   type: 'tag' }
+10 silly addNamed bower@latest
+11 verbose addNamed "latest" is being treated as a dist-tag for bower
+12 info addNameTag [ 'bower', 'latest' ]
+13 silly mapToRegistry name bower
+14 silly mapToRegistry using default registry
+15 silly mapToRegistry registry https://registry.npmjs.org/
+16 silly mapToRegistry data { raw: 'bower',
+16 silly mapToRegistry   scope: null,
+16 silly mapToRegistry   name: 'bower',
+16 silly mapToRegistry   rawSpec: '',
+16 silly mapToRegistry   spec: 'latest',
+16 silly mapToRegistry   type: 'tag' }
+17 silly mapToRegistry uri https://registry.npmjs.org/bower
+18 verbose addNameTag registry:https://registry.npmjs.org/bower not in flight; fetching
+19 verbose request uri https://registry.npmjs.org/bower
+20 verbose request no auth needed
+21 info attempt registry request try #1 at 14:20:39
+22 verbose request id f28d943563e74b33
+23 verbose etag "8AD7QXGBKXMELI5NO4OG22DGS"
+24 http request GET https://registry.npmjs.org/bower
+25 http 304 https://registry.npmjs.org/bower
+26 verbose headers { date: 'Mon, 27 Jun 2016 12:20:39 GMT',
+26 verbose headers   via: '1.1 varnish',
+26 verbose headers   'cache-control': 'max-age=300',
+26 verbose headers   etag: '"8AD7QXGBKXMELI5NO4OG22DGS"',
+26 verbose headers   age: '283',
+26 verbose headers   connection: 'keep-alive',
+26 verbose headers   'x-served-by': 'cache-ams4134-AMS',
+26 verbose headers   'x-cache': 'HIT',
+26 verbose headers   'x-cache-hits': '8',
+26 verbose headers   'x-timer': 'S1467030039.524416,VS0,VE0',
+26 verbose headers   vary: 'Accept-Encoding' }
+27 silly get cb [ 304,
+27 silly get   { date: 'Mon, 27 Jun 2016 12:20:39 GMT',
+27 silly get     via: '1.1 varnish',
+27 silly get     'cache-control': 'max-age=300',
+27 silly get     etag: '"8AD7QXGBKXMELI5NO4OG22DGS"',
+27 silly get     age: '283',
+27 silly get     connection: 'keep-alive',
+27 silly get     'x-served-by': 'cache-ams4134-AMS',
+27 silly get     'x-cache': 'HIT',
+27 silly get     'x-cache-hits': '8',
+27 silly get     'x-timer': 'S1467030039.524416,VS0,VE0',
+27 silly get     vary: 'Accept-Encoding' } ]
+28 verbose etag https://registry.npmjs.org/bower from cache
+29 verbose get saving bower to /home/rico/.npm/registry.npmjs.org/bower/.cache.json
+30 verbose correctMkdir /home/rico/.npm correctMkdir not in flight; initializing
+31 silly addNameTag next cb for bower with tag latest
+32 silly addNamed bower@1.7.9
+33 verbose addNamed "1.7.9" is a plain semver version for bower
+34 silly cache afterAdd bower@1.7.9
+35 verbose afterAdd /home/rico/.npm/bower/1.7.9/package/package.json not in flight; writing
+36 verbose correctMkdir /home/rico/.npm correctMkdir not in flight; initializing
+37 verbose afterAdd /home/rico/.npm/bower/1.7.9/package/package.json written
+38 silly install resolved [ { name: 'bower',
+38 silly install resolved     version: '1.7.9',
+38 silly install resolved     description: 'The browser package manager',
+38 silly install resolved     author: { name: 'Twitter' },
+38 silly install resolved     license: 'MIT',
+38 silly install resolved     repository: { type: 'git', url: 'git+https://github.com/bower/bower.git' },
+38 silly install resolved     main: 'lib',
+38 silly install resolved     bin: { bower: 'bin/bower' },
+38 silly install resolved     homepage: 'http://bower.io',
+38 silly install resolved     engines: { node: '>=0.10.0' },
+38 silly install resolved     keywords: [ 'bower' ],
+38 silly install resolved     files: [ 'bin', 'lib' ],
+38 silly install resolved     bugs: { url: 'https://github.com/bower/bower/issues' },
+38 silly install resolved     _id: 'bower@1.7.9',
+38 silly install resolved     scripts: {},
+38 silly install resolved     _shasum: 'b7296c2393e0d75edaa6ca39648132dd255812b0',
+38 silly install resolved     _from: 'bower@latest',
+38 silly install resolved     _npmVersion: '3.7.3',
+38 silly install resolved     _nodeVersion: '5.9.0',
+38 silly install resolved     _npmUser: { name: 'sheerun', email: 'sheerun@sher.pl' },
+38 silly install resolved     dist:
+38 silly install resolved      { shasum: 'b7296c2393e0d75edaa6ca39648132dd255812b0',
+38 silly install resolved        tarball: 'https://registry.npmjs.org/bower/-/bower-1.7.9.tgz' },
+38 silly install resolved     maintainers:
+38 silly install resolved      [ [Object],
+38 silly install resolved        [Object],
+38 silly install resolved        [Object],
+38 silly install resolved        [Object],
+38 silly install resolved        [Object],
+38 silly install resolved        [Object],
+38 silly install resolved        [Object] ],
+38 silly install resolved     _npmOperationalInternal:
+38 silly install resolved      { host: 'packages-12-west.internal.npmjs.com',
+38 silly install resolved        tmp: 'tmp/bower-1.7.9.tgz_1459857239351_0.9720134933013469' },
+38 silly install resolved     directories: {},
+38 silly install resolved     _resolved: 'https://registry.npmjs.org/bower/-/bower-1.7.9.tgz',
+38 silly install resolved     readme: 'ERROR: No README data found!' } ]
+39 info install bower@1.7.9 into /usr/lib
+40 info installOne bower@1.7.9
+41 verbose installOne of bower to /usr/lib not in flight; installing
+42 verbose correctMkdir /home/rico/.npm/_locks correctMkdir not in flight; initializing
+43 verbose lock using /home/rico/.npm/_locks/bower-f46d670cb56ecd4d.lock for /usr/lib/node_modules/bower
+44 silly install write writing bower 1.7.9 to /usr/lib/node_modules/bower
+45 verbose unbuild lib/node_modules/bower
+46 info preuninstall bower@1.7.9
+47 info uninstall bower@1.7.9
+48 verbose unbuild rmStuff bower@1.7.9 from /usr/lib/node_modules
+49 silly gentlyRm /usr/bin/bower is being gently removed
+50 silly gentlyRm verifying /usr is an npm working directory
+51 silly gentlyRm containing path /usr is under npm's control, in /usr
+52 silly gentlyRm deletion target /usr/bin/bower is under /usr
+53 verbose gentlyRm vacuuming from /usr/bin/bower up to /usr
+54 silly vacuum-fs removing /usr/bin/bower
+55 verbose unlock done using /home/rico/.npm/_locks/bower-f46d670cb56ecd4d.lock for /usr/lib/node_modules/bower
+56 verbose stack Error: EACCES, unlink '/usr/bin/bower'
+57 verbose cwd /home/rico/Kunden/hundh/intranet/produkte/contao/system/modules/tagsinput
+58 error Linux 3.13.0-88-generic
+59 error argv "/usr/bin/node" "/usr/bin/npm" "i" "-g" "bower"
+60 error node v0.10.45
+61 error npm  v2.15.1
+62 error path /usr/bin/bower
+63 error code EACCES
+64 error errno 3
+65 error Error: EACCES, unlink '/usr/bin/bower'
+65 error  { [Error: EACCES, unlink '/usr/bin/bower'] errno: 3, code: 'EACCES', path: '/usr/bin/bower' }
+66 error Please try running this command again as root/Administrator.
+67 verbose exit [ 3, true ]
+68 verbose unbuild lib/node_modules/bower
+69 info preuninstall bower@1.7.9
+70 info uninstall bower@1.7.9
+71 verbose unbuild rmStuff bower@1.7.9 from /usr/lib/node_modules
+72 silly gentlyRm /usr/bin/bower is being gently removed
+73 silly gentlyRm verifying /usr is an npm working directory
+74 silly gentlyRm containing path /usr is under npm's control, in /usr
+75 silly gentlyRm deletion target /usr/bin/bower is under /usr
+76 verbose gentlyRm vacuuming from /usr/bin/bower up to /usr
+77 silly vacuum-fs removing /usr/bin/bower
+78 error error rolling back Error: EACCES, unlink '/usr/bin/bower'
+78 error error rolling back  { [Error: EACCES, unlink '/usr/bin/bower'] errno: 3, code: 'EACCES', path: '/usr/bin/bower' }

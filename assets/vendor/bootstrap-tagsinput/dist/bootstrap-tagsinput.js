@@ -295,6 +295,7 @@
               // support for Angular promises
               data.then(processItems);
             } else {
+                console.log('FII');
               // support for functions and jquery promises
               $.when(data)
                .then(processItems);

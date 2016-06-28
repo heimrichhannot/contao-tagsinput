@@ -18,6 +18,7 @@
     border-radius: .25em;
     float: left;
     margin-bottom: 3px;
+	cursor: pointer;
 }
 
 .bootstrap-tagsinput .label-info {
@@ -31,6 +32,10 @@
     background-image: -o-linear-gradient(bottom, #ccc 0, #eee 60%);
     background-image: -ms-linear-gradient(bottom, #ccc 0, #eee 60%);
     background-image: linear-gradient(to top, #ccc 0, #eee 60%);
+}
+
+.bootstrap-tagsinput  .label-info.sortable-ghost{
+	background: #f4e2c9;
 }
 
 .bootstrap-tagsinput .label-info[href]:hover,
