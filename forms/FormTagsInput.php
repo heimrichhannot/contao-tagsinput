@@ -50,6 +50,21 @@ class FormTagsInput extends \TagsInput
 	protected $strPrefix = 'widget widget-tagsinput';
 
 	/**
+	 * Initialize the object
+	 *
+	 * @param array $arrAttributes An optional attributes array
+	 */
+	public function __construct($arrAttributes=null)
+	{
+		parent::__construct($arrAttributes);
+
+		if(\Environment::get('isAjaxRequest'))
+		{
+			$this->generateAjax(\Input::post('action'), $this->objDca);
+		}
+	}
+
+	/**
 	 * Check for a valid option (see #4383)
 	 */
 	public function validate()
@@ -77,7 +92,6 @@ class FormTagsInput extends \TagsInput
 		{
 			$this->varValue = $varInput;
 		}
-
 	}
 
 

@@ -10,61 +10,165 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 - styled for front and back end
 - add new tags by the following actions: pressing tab/return/semicolon and comma or by leaving the field (as long as freeInput is enabled and a value was typed inside the field)
 
-## Setup
+## Setup / Examples
 
-1. Store values as array to an field
-
-Add the following field syntax to your datacontainer field config and add the field to your palette of choice.
+### 1. Tagsinput with options or options_callback and one possible tag selection
 
 ```
 'locations'         => array
 (
-	'label'            => &$GLOBALS['TL_LANG']['tl_member']['locations'],
-	'exclude'          => true,
-	'inputType'        => 'tagsinput',
-	'eval'             => array
-	(
-		'mandatory'   => true,
-		'placeholder' => &$GLOBALS['TL_LANG']['tl_member']['placeholders']['locations'],
-		'freeInput'   => false,
-	),
-	'options_callback' => array('tl_member_custom', 'getLocations'),
-	'sql'              => 'blob NULL',
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'sql'       => "varchar(255) NOT NULL default ''",
+    'options'   => array('boston', 'berlin', 'hamburg', 'london'),
+    'eval'      => array
+    (
+        'freeInput'   => false
+    )
 ),
 ```
 
-***
-
-2. Store values as new entity in detached database table.
-
-If you want to store the tags into another table for example tl_hobbies, add the following field syntax to your datacontainer field config and add the field to your palette of choice.
-
+### 2. Tagsinput with options or options_callback and multiple possible tag selection and freeInput
 
 ```
-'hobbies' => array
+'locations'         => array
 (
-	'label'            => &$GLOBALS['TL_LANG']['tl_member']['hobbies'],
-	'inputType'        => 'tagsinput',
-	'eval'             => array(
-		'mandatory' => true,
-		'freeInput' => true,
-		'save_tags' => array(
-			'table'    => 'tl_tags',
-			'tagField' => 'title',
-			'defaults' => array
-			(
-				'tstamp'    => time(),
-				'type'      => 'community',
-				'published' => false,
-			),
-		),
-		'tags_callback' => array(array('tl_member_custom', 'addTagAttributes')),
-		'placeholder' => &$GLOBALS['TL_LANG']['tl_member']['placeholders']['hobbies'],
-	),
-	'options_callback' => array('tl_member_custom', 'getHobbiesOptions'),
-	'sql'              => 'blob NULL',
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'sql'       => "blob NULL",
+    'options'   => array('boston', 'berlin', 'hamburg', 'london'),
+    'eval'      => array
+    (
+        'multiple'    => true,
+        'freeInput'   => true
+    )
 ),
 ```
+
+### 3. Tagsinput with freeInput and one possible tag selection
+
+```
+'locations'         => array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'sql'       => "varchar(255) NOT NULL default ''",
+    'eval'      => array
+    (
+        'freeInput'   => true
+    )
+),
+```
+
+### 4. Tagsinput with freeInput and multiple possible tag selection
+
+```
+'locations'         => array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'sql'       => "blob NULL",
+    'eval'      => array
+    (
+        'multiple'    => true,
+        'freeInput'   => true
+    )
+),
+```
+
+### 5. Tagsinput with remote options and one possible tag selection
+
+```
+'locations'         => array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'sql'       => "int(10) unsigned NOT NULL default '0'",
+    'eval'      => array(
+        'placeholder' => &$GLOBALS['TL_LANG']['tl_member']['placeholders']['locations'],
+        'freeInput'   => false,
+        'mode'        => \TagsInput::MODE_REMOTE,
+        'remote'      => array
+        (
+            'fields'       => array('title', 'id'),
+            'format'       => '%s [ID:%s]',
+            'queryField'   => 'title',
+            'queryPattern' => '%QUERY%', 
+            'foreignKey'   => '%parentTable%.id',
+            'limit'        => 10
+        )
+    )
+),
+```
+
+As you can see, there must be a remote configuration, with the tags format and fields, taken from the `foreignKey` relation.
+The `foreignKey` must be a valid database table reference, by a given table name and field. 
+It is also possible to reference the table name from a field within the current record, by adding percent sign before and behind the field name.
+This might be helpful for dynamic tagsinput fields. The `queryField` represents the lookup field for the given typeahead query.
+To provide a custom query pattern for the LIKE search, simply add a custom `queryPattern` and place percent sign where you want;
+
+### 5. Tagsinput with remote options from relation table and multiple possible tag selections and freeInputs 
+
+```
+'locations'         => array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'sql'       => "blob NULL",
+    'eval'      => array(
+        'placeholder' => &$GLOBALS['TL_LANG']['tl_member']['placeholders']['locations'],
+        'freeInput'   => true,
+        'mode'        => \TagsInput::MODE_REMOTE,
+        'remote'      => array
+        (
+            'fields'       => array('title', 'id'),
+            'format'       => '%s [ID:%s]',
+            'queryField'   => 'title',
+            'queryPattern' => '%QUERY%', 
+            'foreignKey'   => '%parentTable%.id',
+            'limit'        => 10
+        ),
+        'save_tags' => array(
+            'table'    => 'tl_calendar_events',
+            'tagField' => 'title',
+            'defaults' => array
+            (
+                'tstamp'    => time(),
+                'pid'       => 1,
+                'type'      => 'community',
+                'published' => false
+            )
+        )
+    )
+),
+```
+
+If you want to add tags as entities within remote mode, you have to enable freeInput and provide a valid save_tags configuration like the one provided above.
+The `tagField` should be the field from the `save_tags` table where the user input from tagsinput should be stored in.
+
+### 6. Tagsinput with remote options from options or options_callback and multiple possible tag selections and freeInputs and tags_callback
+
+```
+'locations'         => array
+(
+	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'inputType' => 'tagsinput',
+    'options'   => array('boston', 'berlin', 'hamburg', 'london'),
+    'sql'       => "blob NULL",
+    'eval'      => array(
+        'placeholder' => &$GLOBALS['TL_LANG']['tl_member']['placeholders']['locations'],
+        'freeInput'   => true,
+        'mode'        => \TagsInput::MODE_REMOTE,
+        'remote'      => array
+        (
+            'queryPattern' => '%QUERY%', 
+            'limit'        => 10
+        ),
+        'tags_callback' => array(array('MyClass', 'addTagAttributes')),
+    ),
+),
+```
+
 
 ### save_tags settings
 
@@ -75,6 +179,17 @@ tagField | | The name of the database field, that contains the label of the tag.
 defaults | | An array of default values, that should be set for new database tag entries. | depends on your table config
 freeInput | true | Enable or disable, the possibility to add custom tags. | false
 
+
+### remote settings
+
+Option | Default | Description | Mandatory
+------ | ---- | ---- | ----
+fields | - | Must contain the table name, where new tags should be stored at. | Only when foreignKey is provided.
+format | -  | The name of the database field, that contains the label of the tag. | Only when foreignKey is provided.
+queryField | - | An array of default values, that should be set for new database tag entries. | Only when foreignKey is provided.
+queryPattern | '%QUERY%' | Enable or disable, the possibility to add custom tags. | true
+foreignKey | - | Enable or disable, the possibility to add custom tags. | false
+limit | 10 | Enable or disable, the possibility to add custom tags. | false
 
 ### tags_callback
 

@@ -135,7 +135,7 @@ class TagsInput extends \Widget
 	protected function setValuesByOptions($varValue)
 	{
 		$values    = array();
-		$freeInput = $this->arrConfiguration['freeInput'];
+		$freeInput = $this->canInputFree();
 
 		if (!is_array($varValue)) {
 			$varValue = array($varValue);
@@ -174,7 +174,7 @@ class TagsInput extends \Widget
 
 			if (!$blnFound && ($intId = $this->addNewTag($strTag)) > 0 || $freeInput)
 			{
-				$value = $freeInput ? $strTag : $intId;
+				$value = ($freeInput && !$intId) ? $strTag : $intId;
 
 				if ($this->multiple) {
 					$values[$key] = $value;
@@ -238,8 +238,6 @@ class TagsInput extends \Widget
 
 	protected function prepare()
 	{
-		$this->addCssFiles();
-
 		if ($this->multiple) {
 			$this->addAttribute('multiple', true);
 			$this->strName .= '[]';
@@ -282,7 +280,7 @@ class TagsInput extends \Widget
 
 		$this->addAttribute('data-items', htmlspecialchars(json_encode($this->arrTags), ENT_QUOTES, 'UTF-8'));
 		
-		$this->addAttribute('data-free-input', ($this->arrConfiguration['freeInput'] !== false ? 'true' : 'false'));
+		$this->addAttribute('data-free-input', ($this->canInputFree() !== false ? 'true' : 'false'));
 
 		$strMode = $this->arrConfiguration['mode'] ?: static::MODE_LOCAL;
 
@@ -296,7 +294,7 @@ class TagsInput extends \Widget
 						json_encode(
 							array(
 								'action'        => static::ACTION_FETCH_REMOTE_OPTIONS,
-								'name'          => $this->name,
+								'name'          => $this->strId,
 								'REQUEST_TOKEN' => \RequestToken::get(),
 							)
 						)
@@ -330,19 +328,6 @@ class TagsInput extends \Widget
 		);
 	}
 
-	protected function addCssFiles()
-	{
-		$GLOBALS['TL_CSS']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
-
-		if (TL_MODE == 'BE') {
-			$GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
-			$GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
-		} else {
-			$GLOBALS['TL_CSS']['tagsinput-fe'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css';
-			$GLOBALS['TL_CSS']['typeahead-fe'] = 'system/modules/tagsinput/assets/css/typeahead-fe.css';
-		}
-	}
-
 	protected function getRemoteOptionsFromQuery($strQuery)
 	{
 		$arrOptions = array();
@@ -351,9 +336,73 @@ class TagsInput extends \Widget
 			return $arrOptions;
 		}
 
-		if ((list($relTable, $relField, $relModelClass) = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) === false) {
+		// get query options from relation table
+		if (($arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) !== false) {
+
+			return $this->getRemoteOptionsFromRelationTable($strQuery, $arrRelationData);
+		}
+
+		// get query options from options or options_callback label value
+		if(is_array($this->arrOptions))
+		{
+			return $this->getRemoteOptionsFromLocalOptions($strQuery);
+		}
+
+		return $arrOptions;
+	}
+
+	protected function getRemoteOptionsFromLocalOptions($strQuery)
+	{
+		$arrOptions = array();
+
+		if(!is_array($this->arrOptions))
+		{
 			return $arrOptions;
 		}
+
+		$strQueryPattern = $this->arrConfiguration['remote']['queryPattern'] ? str_replace('QUERY', $strQuery, $this->arrConfiguration['remote']['queryPattern']) : ('%' . $strQuery . '%');
+		$strQueryPattern = str_replace('%', '.*', preg_quote($strQueryPattern, '/'));
+		$intLimit        = $this->arrConfiguration['remote']['limit'] ?: 10;
+		$i = 0;
+
+		foreach ($this->arrOptions as $arrLocalOption)
+		{
+			if(!isset($arrLocalOption['label']))
+			{
+				continue;
+			}
+
+			if(((bool) preg_match("/^{$strQueryPattern}$/i", $arrLocalOption['label'])) === false)
+			{
+				continue;
+			}
+
+			$arrOption = $this->generateOption($arrLocalOption['value'], $arrLocalOption['label']);
+
+			if($arrOption === false)
+			{
+				continue;
+			}
+
+			$arrOptions[] = $arrOption;
+			$i++;
+
+			if($i+1 == $intLimit)
+			{
+				break;
+			}
+		}
+
+		asort($arrOptions);
+
+		return $arrOptions;
+	}
+
+	protected function getRemoteOptionsFromRelationTable($strQuery, array $arrRelationData)
+	{
+		$arrOptions = array();
+
+		list($relTable, $relField, $relModelClass) = $arrRelationData;
 
 		$strQueryField   = $this->arrConfiguration['remote']['queryField'];
 		$strQueryPattern = $this->arrConfiguration['remote']['queryPattern'] ? str_replace('QUERY', $strQuery, $this->arrConfiguration['remote']['queryPattern']) : ('%' . $strQuery . '%');
@@ -373,12 +422,19 @@ class TagsInput extends \Widget
 
 		while ($objEntities->next())
 		{
-			$arrOptions[] = $this->generateOption($objEntities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $objEntities->current());
+			$arrOption = $this->generateOption($objEntities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $objEntities->current());
+
+			if($arrOption === false)
+			{
+				continue;
+			}
+
+			$arrOptions[] = $arrOption;
 		}
 
 		asort($arrOptions);
 
-		return array_values($arrOptions);
+		return $arrOptions;
 	}
 
 	public function generateAjax($strAction, \DataContainer $objDca)
@@ -388,7 +444,7 @@ class TagsInput extends \Widget
 			return;
 		}
 
-		$strField = \Input::post('name');
+		$strField = $objDca->field = \Input::post('name');
 
 		\Controller::loadDataContainer($objDca->table);
 
@@ -415,7 +471,7 @@ class TagsInput extends \Widget
 		switch ($strAction) {
 			case static::ACTION_FETCH_REMOTE_OPTIONS:
 				$objWidget = new \TagsInput(\Widget::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
-				$return    = $objWidget->getRemoteOptionsFromQuery(\Input::post('query'));
+				$return    = array_values($objWidget->getRemoteOptionsFromQuery(\Input::post('query')));
 				break;
 		}
 
@@ -431,31 +487,16 @@ class TagsInput extends \Widget
 			case static::MODE_REMOTE:
 				\Controller::loadDataContainer($this->strTable);
 
-				if ((list($relTable, $relField, $relModelClass) = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) === false)
-				{
-					return $arrOptions;
+				// get query options from relation table
+				if (($arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) !== false) {
+
+					return $this->getActiveRemoteOptionsFromRelationTable($arrValues, $arrRelationData);
 				}
 
-				/** @var \Model $objEntities */
-				$objEntities = $relModelClass::findMultipleByIds($arrValues);
-
-				if ($objEntities === null)
+				// get query options from options or options_callback label value
+				if(is_array($this->arrOptions))
 				{
-					return $arrOptions;
-				}
-
-				$arrFields = $this->arrConfiguration['remote']['fields'];
-
-				while ($objEntities->next())
-				{
-					$arrOption = $this->generateOption($objEntities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $objEntities->current());
-
-					if($arrOption === false)
-					{
-						continue;
-					}
-
-					$arrOptions[] = $arrOption;
+					return $this->getActiveRemoteOptionsFromLocalOptions($arrValues);
 				}
 
 				break;
@@ -490,6 +531,8 @@ class TagsInput extends \Widget
 				// default: iterate over all options and trigger tags_callback
 				if(is_array($this->arrOptions))
 				{
+					$i = count($this->varValue); // add new values after last varValue index
+
 					foreach ($this->arrOptions as $arrDefaultOption)
 					{
 						if(($arrOption = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label'])) === false)
@@ -497,8 +540,24 @@ class TagsInput extends \Widget
 							continue;
 						}
 
-						$arrOptions[] = $arrOption;
+						// default options should be sorted by given value order if value is set
+						if(!empty($this->varValue))
+						{
+							if(is_array($this->varValue) && ($pos = array_search($arrDefaultOption['value'], $this->varValue)) !== false)
+							{
+								$arrOptions[$pos] = $arrOption;
+								continue;
+							}
+						}
+
+						// store value as key for sorting by $this->varValue or if single varValue
+						$arrOptions[$i] = $arrOption;
+						$i++;
+
 					}
+
+					// sort by keys
+					ksort($arrOptions);
 				}
 
 			break;
@@ -506,6 +565,99 @@ class TagsInput extends \Widget
 
 		return $arrOptions;
 	}
+
+	protected function getActiveRemoteOptionsFromLocalOptions(array $arrValues = array())
+	{
+		$arrOptions = array();
+		$arrLocalValues = array();
+
+		foreach ($this->arrOptions as $arrLocalOption)
+		{
+			if(!isset($arrLocalOption['value']))
+			{
+				continue;
+			}
+
+			// restore postion from arrValues position
+			if(($pos = array_search($arrLocalOption['value'], $arrValues)) === false)
+			{
+				continue;
+			}
+
+			$arrOption = $this->generateOption($arrLocalOption['value'], $arrLocalOption['label']);
+
+			if($arrOption === false)
+			{
+				continue;
+			}
+
+			$arrLocalValues[] = $arrLocalOption['value'];
+			$arrOptions[$pos] = $arrOption;
+		}
+
+		if($this->canInputFree())
+		{
+			$arrFreeValues = array_diff($arrValues, $arrLocalValues);
+
+			if(is_array($arrFreeValues))
+			{
+				foreach ($arrFreeValues as $arrFreeValue)
+				{
+					$arrOption = $this->generateOption($arrFreeValue, $arrFreeValue);
+
+					// restore postion from arrValues position
+					if(($pos = array_search($arrFreeValue, $arrValues)) === false)
+					{
+						continue;
+					}
+
+					if($arrOption === false)
+					{
+						continue;
+					}
+
+					$arrOptions[$pos] = $arrOption;
+				}
+			}
+		}
+
+		ksort($arrOptions);
+
+		return $arrOptions;
+	}
+
+
+	protected function getActiveRemoteOptionsFromRelationTable(array $arrValues = array(), array $arrRelationData)
+	{
+		$arrOptions = array();
+
+		list($relTable, $relField, $relModelClass) = $arrRelationData;
+
+		/** @var \Model $objEntities */
+		$objEntities = $relModelClass::findMultipleByIds($arrValues);
+
+		if ($objEntities === null)
+		{
+			return $arrOptions;
+		}
+
+		$arrFields = $this->arrConfiguration['remote']['fields'];
+
+		while ($objEntities->next())
+		{
+			$arrOption = $this->generateOption($objEntities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $objEntities->current());
+
+			if($arrOption === false)
+			{
+				continue;
+			}
+
+			$arrOptions[] = $arrOption;
+		}
+
+		return $arrOptions;
+	}
+
 
 	protected function isValidAjaxActions($strAction)
 	{
@@ -616,5 +768,41 @@ class TagsInput extends \Widget
 		}
 
 		return $arrOption;
+	}
+
+	protected function canInputFree()
+	{
+		$blnCheck = false;
+
+		if($this->arrConfiguration['freeInput'])
+		{
+			$blnCheck = true;
+		}
+
+		switch ($this->mode)
+		{
+			case static::MODE_REMOTE:
+				// disable free input if no relation data isset
+				if (($this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) === false)
+				{
+					$blnCheck = false;
+				}
+
+				// disable if no save_tags configuration isset
+				if (($arrSaveConfig = $this->arrConfiguration['save_tags']) === null && !isset($arrSaveConfig['table']))
+				{
+					$blnCheck = false;
+				}
+
+				// support free input for local remote options
+				if(!$blnCheck && is_array($this->arrOptions))
+				{
+					$blnCheck = true;
+				}
+
+			break;
+		}
+
+		return $blnCheck;
 	}
 }

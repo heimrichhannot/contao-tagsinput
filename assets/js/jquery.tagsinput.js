@@ -8,15 +8,20 @@
 			this.setupTagsInput();
 		},
         ajaxComplete : function(){
-            this.setupTagsInput(true);
+            this.setupTagsInput();
         },
-		setupTagsInput: function (ajaxComplete) {
+		setupTagsInput: function () {
 			var $tagInputs = $(this.config.selector);
 
 			$tagInputs.each(function () {
+				var $input = $(this);
 
-				var $input = $(this),
-					placeholder = $input.data('placeholder'),
+                // do not init tagsinput again
+                if($input.data('tagsinput')){
+                    return true;
+                }
+
+                var	placeholder = $input.data('placeholder'),
 					mode = $input.data('mode'),
 					postData = $input.data('post-data'),
                     options = {
@@ -26,15 +31,11 @@
                     },
                     data = $input.data();
 
-                // ajaxComplete within remote mode should not reinit tagsinput
-                if(ajaxComplete && mode == 'remote'){
-                    return true;
-                }
-
                 function prepare(query, settings) {
                     postData.query = query;
                     settings.type = 'POST';
                     settings.data = postData;
+                    settings.isTagsInputCallback = true;
                     return settings;
                 }
 
@@ -192,12 +193,14 @@
         return this; // for testing purposes
     };
 
-	$(document).ready(function () {
-		TagsInputContaoBackend.init();
-	});
+    $(function() {
+        TagsInputContaoBackend.init();
+    });
 
-	$(document).ajaxComplete(function () {
-		TagsInputContaoBackend.init();
+	$(document).ajaxComplete(function (event, xhr, settings) {
+        if(!settings.isTagsInputCallback){
+            TagsInputContaoBackend.ajaxComplete();
+        }
 	});
 
 })(jQuery);
