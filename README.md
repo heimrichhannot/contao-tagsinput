@@ -8,6 +8,8 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 - Free Input can be set to true or false on dca field config.
 - [typeahead.js](http://twitter.github.io/typeahead.js/) support
 - styled for front and back end
+- fetch options asynchronously remote (optional)
+- sort tags per drag & drop
 - add new tags by the following actions: pressing tab/return/semicolon and comma or by leaving the field (as long as freeInput is enabled and a value was typed inside the field)
 
 ## Setup / Examples
