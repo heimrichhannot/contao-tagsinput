@@ -203,4 +203,30 @@
         }
 	});
 
+
+    if(window.MooTools){
+        // extend mootools ajax request and invoke TagsInputContaoBackend.ajaxComplete() onsuccess
+        var classes = [Request, Request.Contao, Request.HTML, Request.JSON],
+            // store reference to original methods
+            orig = {
+                onSuccess: Request.prototype.onSuccess,
+                onFailure: Request.prototype.onFailure
+            },
+            // changes to protos to implement
+            changes = {
+                onSuccess: function(){
+                    Request.Spy && typeof Request.Spy == "function" && Request.Spy.apply(this, arguments);
+                    orig.onSuccess.apply(this, arguments);
+                    TagsInputContaoBackend.ajaxComplete();
+                },
+                onFailure: function(){
+                    Request.Spy && typeof Request.Spy == "function" && Request.Spy.apply(this, arguments);
+                    orig.onFailure.apply(this, arguments);
+                }
+            };
+
+        classes.invoke('implement', changes);
+    }
+
+
 })(jQuery);
