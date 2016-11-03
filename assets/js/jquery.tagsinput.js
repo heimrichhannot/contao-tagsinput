@@ -198,7 +198,7 @@
     });
 
 	$(document).ajaxComplete(function (event, xhr, settings) {
-        if(!settings.isTagsInputCallback){
+        if(typeof settings != 'undefined' && !settings.isTagsInputCallback){
             TagsInputContaoBackend.ajaxComplete();
         }
 	});
