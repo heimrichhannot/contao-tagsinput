@@ -1,33 +1,43 @@
 {
-    "name": "heimrichhannot/contao-tagsinput",
-    "description":"Contao port of Bootstrap Tags Input that provides an front and back end field to add custom values like tags to an field or database table.",
-    "keywords":["contao", "tagsinput", "tags", "input", "widget"],
-    "type": "contao-module",
-    "homepage":"https://github.com/heimrichhannot/contao-tagsinput",
-    "license":"LGPL-3.0+",
-    "authors":[
-        {
-            "name":"Heimrich & Hannot",
-            "email":"digitales@heimrich-hannot.de",
-            "homepage":"http://www.heimrich-hannot.de",
-            "role":"Developer"
-        }
-    ],
-    "support":{
-        "issues":"https://github.com/heimrichhannot/contao-tagsinput/issues"
-    },
-    "require": {
-        "contao/core": ">=3.2,<4-dev",
-        "contao-community-alliance/composer-installer": "*"
-    },
-    "autoload": {
-        "classmap": [""]
-    },
-    "extra": {
-        "contao": {
-            "sources": {
-                "": "system/modules/tagsinput"
-            }
-        }
+  "name": "heimrichhannot/contao-tagsinput",
+  "description": "Contao port of Bootstrap Tags Input that provides an front and back end field to add custom values like tags to an field or database table.",
+  "keywords": [
+    "contao",
+    "tagsinput",
+    "tags",
+    "input",
+    "widget"
+  ],
+  "type": "contao-module",
+  "homepage": "https://github.com/heimrichhannot/contao-tagsinput",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Heimrich & Hannot",
+      "email": "digitales@heimrich-hannot.de",
+      "homepage": "http://www.heimrich-hannot.de",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/heimrichhannot/contao-tagsinput/issues"
+  },
+  "require": {
+    "contao/core": ">=3.2,<4-dev",
+    "contao-community-alliance/composer-installer": "*",
+    "heimrichhannot/contao-components": "~1.0",
+    "heimrichhannot/contao-haste_plus": "^1.6"
+  },
+  "autoload": {
+    "classmap": [
+      ""
+    ]
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "": "system/modules/tagsinput"
+      }
+    }
+  }
 }

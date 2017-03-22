@@ -41,8 +41,13 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
     'options'   => array('boston', 'berlin', 'hamburg', 'london'),
     'eval'      => array
     (
-        'multiple'    => true,
-        'freeInput'   => true
+        'multiple'        => true,
+        'freeInput'       => true,
+        'multiple'    	  => true,
+		'maxTags'         => 3,
+		'maxChars'        => 12,
+		'trimValue'       => true,
+		'allowDuplicates' => true,
     )
 ),
 ```
@@ -170,7 +175,19 @@ The `tagField` should be the field from the `save_tags` table where the user inp
     ),
 ),
 ```
-
+### eval options
+Option | Default | Description | Mandatory
+------ | ---- | ---- | ----
+freeInput | true | Enable or disable, the possibility to add custom tags. | false
+multiple | true | Enable multiple input tags, disable for single tags. | false  
+maxTags | undefined | When set and multiple, no more than the given number of tags are allowed to add (default: undefined). When maxTags is reached, a class 'bootstrap-tagsinput-max' is placed on the tagsinput element. | false
+maxChars | undefined | Defines the maximum length of a single tag. | false
+trimValue | false | When true, automatically removes all whitespace around tags.
+allowDuplicates | false | When true, the same tag can be added multiple times.| false
+highlight | true | Set to false if the typeahead dropdown should not be shown on focus, without input. | false
+highlightOptions | First 5 options | Enter the array that returns highlight option, when focus input without typing someting in input. | false
+highlightOptionsCallback | First 5 options | Enter a valid callback, that returns all highlighted options as array, when focus input without typing someting in input. | false
+limit | 5 | Limit the options when typed somethin in the input. | false
 
 ### save_tags settings
 
@@ -179,8 +196,6 @@ Option | Default | Description | Mandatory
 table | | Must contain the table name, where new tags should be stored at. | true
 tagField | | The name of the database field, that contains the label of the tag. | true
 defaults | | An array of default values, that should be set for new database tag entries. | depends on your table config
-freeInput | true | Enable or disable, the possibility to add custom tags. | false
-
 
 ### remote settings
 

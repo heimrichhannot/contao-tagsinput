@@ -30,29 +30,40 @@ $GLOBALS['TL_FFL']['tagsinput'] = 'FormTagsInput';
  */
 if (TL_MODE == 'BE')
 {
-	$GLOBALS['TL_JAVASCRIPT']['jquery'] = 'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js';
-	$GLOBALS['TL_JAVASCRIPT']['jquery-noconflict'] = 'system/modules/tagsinput/assets/js/jquery-noconflict.js';
+    $GLOBALS['TL_JAVASCRIPT']['jquery']            = 'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js';
+    $GLOBALS['TL_JAVASCRIPT']['jquery-noconflict'] = 'system/modules/tagsinput/assets/js/jquery-noconflict.js';
+
+    $GLOBALS['TL_JAVASCRIPT']['tagsinput']    = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js';
+    $GLOBALS['TL_JAVASCRIPT']['sortable']     = 'system/modules/tagsinput/assets/vendor/Sortable/Sortable.min.js';
+    $GLOBALS['TL_JAVASCRIPT']['typeahead']    = 'system/modules/tagsinput/assets/vendor/corejs-typeahead/dist/typeahead.bundle.min.js';
+    $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'system/modules/tagsinput/assets/js/jquery.tagsinput.min.js';
+
+    $GLOBALS['TL_CSS']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
+
+    $GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
+    $GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
 }
 
-$GLOBALS['TL_JAVASCRIPT']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput' . (!$GLOBALS['TL_CONFIG']['debugMode'] ? '.min' : '') . '.js' . (TL_MODE == 'BE' ? '' : '|static');
-$GLOBALS['TL_JAVASCRIPT']['sortable'] = 'system/modules/tagsinput/assets/vendor/Sortable/Sortable' . (!$GLOBALS['TL_CONFIG']['debugMode'] ? '.min' : '') . '.js' . (TL_MODE == 'BE' ? '' : '|static');
-$GLOBALS['TL_JAVASCRIPT']['typeahead'] = 'system/modules/tagsinput/assets/vendor/corejs-typeahead/dist/typeahead.bundle' . (!$GLOBALS['TL_CONFIG']['debugMode'] ? '.min' : '') . '.js' . (TL_MODE == 'BE' ? '' : '|static');;
-$GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'system/modules/tagsinput/assets/js/jquery.tagsinput' . (!$GLOBALS['TL_CONFIG']['debugMode'] ? '.min' : '') . '.js' . (TL_MODE == 'BE' ? '' : '|static');;
 
-$GLOBALS['TL_CSS']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
-
-/**
- * CSS
- */
-if (TL_MODE == 'BE') {
-	$GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
-	$GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
-} else {
-	$GLOBALS['TL_CSS']['tagsinput-fe'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css';
-	$GLOBALS['TL_CSS']['typeahead-fe'] = 'system/modules/tagsinput/assets/css/typeahead-fe.css';
-}
+$GLOBALS['TL_COMPONENTS']['bs.tagsinput'] = [
+    'js'  => [
+        'files' => [
+            'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js|static',
+            'system/modules/tagsinput/assets/vendor/Sortable/Sortable.min.js|static',
+            'system/modules/tagsinput/assets/vendor/corejs-typeahead/dist/typeahead.bundle.min.js|static',
+            'system/modules/tagsinput/assets/js/jquery.tagsinput.min.js|static',
+        ],
+    ],
+    'css' => [
+        'files' => [
+            'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css|static',
+            'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css|static',
+            'system/modules/tagsinput/assets/css/typeahead-fe.css|static',
+        ],
+    ],
+];
 
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['executePostActions']['tagsInput'] = array('TagsInput', 'generateAjax');
+$GLOBALS['TL_HOOKS']['executePostActions']['tagsInput'] = ['TagsInput', 'generateAjax'];
