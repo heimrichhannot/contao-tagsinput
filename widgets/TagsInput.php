@@ -870,7 +870,7 @@ class TagsInput extends \Widget
                 if (is_array($callback))
                 {
                     $this->import($callback[0]);
-                    $arrOption = $this->$callback[0]->$callback[1]($arrOption, $this->dataContainer);
+                    $arrOption = $this->{$callback[0]}->{$callback[1]}($arrOption, $this->dataContainer);
                 }
                 elseif (is_callable($callback))
                 {
