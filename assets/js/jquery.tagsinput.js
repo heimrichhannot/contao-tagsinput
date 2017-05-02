@@ -166,6 +166,9 @@
                         $input.tagsinput('add', {value: this.value, label: this.value, title: this.value});
                         this.value = '';
 
+                        // reset the typeahead dropdown preselection
+                        $input.tagsinput('input').typeahead('val', '');
+
                         // restore tt-input width
                         if (typeof placeholder === 'undefined' || placeholder.length > 0) {
                             $input.tagsinput('input').width(hintWidth);

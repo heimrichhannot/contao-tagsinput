@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.3] - 2017-05-02
+- reset typeahead dropdown preselection on blur()
+
 ## [2.1.2] - 2017-04-12
 - created new tag
 
