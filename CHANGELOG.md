@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.4] - 2017-05-17
+- fixed composer.json for contao 4
+
 ## [2.1.3] - 2017-05-02
 - reset typeahead dropdown preselection on blur()
 
