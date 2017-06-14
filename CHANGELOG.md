@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.5] - 2017-06-14
+- fixed ja inclusion for contao 4
+
 ## [2.1.4] - 2017-05-17
 - fixed composer.json for contao 4
 

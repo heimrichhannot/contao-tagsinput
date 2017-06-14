@@ -30,7 +30,11 @@ $GLOBALS['TL_FFL']['tagsinput'] = 'FormTagsInput';
  */
 if (TL_MODE == 'BE')
 {
-    $GLOBALS['TL_JAVASCRIPT']['jquery']            = 'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js';
+    $strJQueryPath = version_compare(VERSION, '4.0', '<') ?
+        'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js' :
+        'assets/jquery/jquery.min.js';
+
+    $GLOBALS['TL_JAVASCRIPT']['jquery']            = $strJQueryPath;
     $GLOBALS['TL_JAVASCRIPT']['jquery-noconflict'] = 'system/modules/tagsinput/assets/js/jquery-noconflict.js';
 
     $GLOBALS['TL_JAVASCRIPT']['tagsinput']    = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js';
