@@ -86,14 +86,13 @@
                 var highlights = null;
 
                 if (data.highlight && $input.data('highlights')) {
-                    highlights = new Bloodhound($.extend(options, {local: $input.data('highlights')}));
-                    highlights.initialize();
+                    $.extend(options, {local: $input.data('highlights')});
                 }
 
                 var bloodhound = new Bloodhound(options);
                 bloodhound.initialize();
 
-                function sourceWithDefaults(q, sync) {
+                function sourceWithDefaults(q, sync, async) {
 
                     if (q === '') {
 
@@ -102,7 +101,7 @@
                     }
 
                     else {
-                        bloodhound.search(q, sync);
+                        bloodhound.search(q, sync, async);
                     }
                 }
 

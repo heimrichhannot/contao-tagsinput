@@ -305,8 +305,6 @@ class TagsInput extends \Widget
 
         if ($this->highlight !== false)
         {
-            $this->addAttribute('data-highlight', 1);
-
             if (is_array($this->highlightOptions))
             {
                 $arrHighlights = $this->highlightOptions;
@@ -376,6 +374,7 @@ class TagsInput extends \Widget
 
         if (!empty($this->arrHighlights))
         {
+            $this->addAttribute('data-highlight', 1);
             $this->addAttribute('data-highlights', htmlspecialchars(json_encode($this->arrHighlights), ENT_QUOTES, 'UTF-8'));
         }
 
