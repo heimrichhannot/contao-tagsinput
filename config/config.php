@@ -30,13 +30,6 @@ $GLOBALS['TL_FFL']['tagsinput'] = 'FormTagsInput';
  */
 if (TL_MODE == 'BE')
 {
-    $strJQueryPath = version_compare(VERSION, '4.0', '<') ?
-        'assets/jquery/core/' . $GLOBALS['TL_ASSETS']['JQUERY'] . '/jquery.min.js' :
-        'assets/jquery/js/jquery.min.js';
-
-    $GLOBALS['TL_JAVASCRIPT']['jquery']            = $strJQueryPath;
-    $GLOBALS['TL_JAVASCRIPT']['jquery-noconflict'] = 'system/modules/tagsinput/assets/js/jquery-noconflict.js';
-
     $GLOBALS['TL_JAVASCRIPT']['tagsinput']    = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js';
     $GLOBALS['TL_JAVASCRIPT']['sortable']     = 'system/modules/tagsinput/assets/vendor/Sortable/Sortable.min.js';
     $GLOBALS['TL_JAVASCRIPT']['typeahead']    = 'system/modules/tagsinput/assets/vendor/corejs-typeahead/dist/typeahead.bundle.min.js';

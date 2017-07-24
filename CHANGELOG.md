@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.9] - 2017-07-24
+
+### Changed
+- jquery is provided within back end mode by `heimrichhannot/contao-haste_plus`, removed from tagsinput
+
 ## [2.1.8] - 2017-07-24
 
 ### Added
