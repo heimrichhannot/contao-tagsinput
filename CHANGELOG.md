@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.8] - 2017-07-24
+
+### Added
+- contao 4 backend styles
+
 ## [2.1.7] - 2017-06-21
 - fixed `jquery` js path for contao 4
 

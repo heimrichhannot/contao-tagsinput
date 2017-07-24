@@ -18,7 +18,7 @@
     border-radius: .25em;
     float: left;
     margin-bottom: 3px;
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .bootstrap-tagsinput .label-info {
@@ -34,8 +34,8 @@
     background-image: linear-gradient(to top, #ccc 0, #eee 60%);
 }
 
-.bootstrap-tagsinput  .label-info.sortable-ghost{
-	background: #f4e2c9;
+.bootstrap-tagsinput .label-info.sortable-ghost {
+    background: #f4e2c9;
 }
 
 .bootstrap-tagsinput .label-info[href]:hover,
@@ -43,7 +43,7 @@
     background-color: #31b0d5;
 }
 
-.bootstrap-tagsinput .label-info.new{
+.bootstrap-tagsinput .label-info.new {
     background: #f0ad4e none;
     border-color: #f0ad4e;
     color: #fff;
@@ -54,6 +54,28 @@
     content: '\00D7';
 }
 
-.styled_select.tl_tagsinput{
+.styled_select.tl_tagsinput {
     display: none;
+}
+
+.isContao4 .bootstrap-tagsinput {
+    padding: 5px 6px 2px;
+}
+
+.isContao4 .bootstrap-tagsinput .label {
+    font-size: .875rem;
+    color: #222;
+    background: #eaeaea;
+    border: none;
+    padding: 5px 10px;
+    text-shadow: none;
+}
+
+.isContao4 .bootstrap-tagsinput .label:hover {
+    background: #c33;
+    color: #fff;
+}
+
+.isContao4 .bootstrap-tagsinput .tag [data-role="remove"]:hover {
+    box-shadow: none;
 }
