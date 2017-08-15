@@ -46,7 +46,7 @@
 /*Added to input that's initialized into a typeahead*/
 .twitter-typeahead .tt-input {
     line-height: 20px;
-    margin-bottom: 3px;
+    margin-bottom: 0;
 }
 
 /*Added to hint input.*/

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.10] - 2017-08-15
+
+### Changed
+- margin-bottom removed from tt-input to make work with bootstrap 4.0.0-beta
+
 ## [2.1.9] - 2017-07-24
 
 ### Changed
