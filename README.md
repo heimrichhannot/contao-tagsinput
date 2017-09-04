@@ -43,7 +43,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
     (
         'multiple'        => true,
         'freeInput'       => true,
-        'multiple'    	  => true,
+        'multiple'        => true,
 		'maxTags'         => 3,
 		'maxChars'        => 12,
 		'trimValue'       => true,

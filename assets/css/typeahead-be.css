@@ -53,3 +53,12 @@
 .twitter-typeahead .tt-hint {
     line-height: 20px;
 }
+
+.tag-list {
+    margin: 10px 0;
+}
+
+.tag-list li {
+    display: inline-block;
+    margin-right: 10px;
+}
