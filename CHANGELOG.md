@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.12] - 2017-09-08
+
+### Added
+- tag list weights
+
 ## [2.1.11] - 2017-09-04
 
 ### Added
