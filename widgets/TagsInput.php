@@ -386,9 +386,26 @@ class TagsInput extends \Widget
         if ($this->arrConfiguration['showTagList']) {
             $strTagList = '<ul class="tag-list">';
 
-            foreach ($this->arrOptionsAll as $arrTag)
-            {
-                $strTagList .= '<li><a href="#">' . $arrTag['value'] . '</a></li>';
+            if (isset($this->arrConfiguration['option_weights']) || isset($this->arrConfiguration['option_weights_callback'])) {
+                $arrTagWeights = \HeimrichHannot\Haste\Dca\General::getConfigByArrayOrCallbackOrFunction(
+                    (array)$this->arrConfiguration, 'option_weights', [$this->objDca]);
+
+                $intMaxCount = 0;
+
+                foreach ($arrTagWeights as $strTag => $intCount) {
+                    if ($intCount > $intMaxCount) {
+                        $intMaxCount = $intCount;
+                    }
+                }
+
+                foreach ($arrTagWeights as $strTag => $intCount) {
+                    $strTagList .= '<li><a class="' . static::getTagSizeClass($intCount, $intMaxCount) .
+                        '" href="#" title="' . $intCount . '">' . $strTag . '</a></li>';
+                }
+            } else {
+                foreach ($this->arrOptionsAll as $arrTag) {
+                    $strTagList .= '<li><a href="#">' . $arrTag['value'] . '</a></li>';
+                }
             }
 
             $strTagList .= '</ul>';
@@ -397,6 +414,15 @@ class TagsInput extends \Widget
         }
 
         return $strWidget;
+    }
+
+    public static function getTagSizeClass($intCount, $intMaxCount)
+    {
+        for ($i = 3; $i >= 0; $i--) {
+            if ($intCount >= $i * $intMaxCount / 4) {
+                return 'size' . ($i + 1);
+            }
+        }
     }
 
     protected function getRemoteOptionsFromQuery($strQuery)

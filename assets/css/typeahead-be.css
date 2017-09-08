@@ -62,3 +62,15 @@
     display: inline-block;
     margin-right: 10px;
 }
+
+.tag-list li .size4 {
+    font-weight: bold;
+}
+
+.tag-list li .size2, .tag-list li .size3 {
+    color: #666;
+}
+
+.tag-list li .size1 {
+    color: #aaa;
+}

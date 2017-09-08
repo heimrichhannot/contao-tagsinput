@@ -188,7 +188,9 @@ highlight | true | Set to false if the typeahead dropdown should not be shown on
 highlightOptions | First 5 options | Enter the array that returns highlight option, when focus input without typing someting in input. | false
 highlightOptionsCallback | First 5 options | Enter a valid callback, that returns all highlighted options as array, when focus input without typing someting in input. | false
 limit | 5 | Limit the options when typed somethin in the input. | false
-showTagList | false | Displays a tag list with all available options (local only atm | false
+showTagList | false | Displays a tag list with all available options (local only atm) | false
+option_weights | null | Expects a callable function returning an array where keys are tag values and values are counts or this array itself | false
+option_weights_callback | null | Expects an array like ['MyClass', 'getWeights'] referencing a function returning an array where keys are tag values and values are counts or this array itself | false
 
 ### save_tags settings
 
