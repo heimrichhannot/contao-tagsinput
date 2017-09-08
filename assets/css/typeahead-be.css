@@ -71,6 +71,14 @@
     color: #666;
 }
 
+.tag-list li .size2:hover, .tag-list li .size3:hover {
+    color: #77ac45;
+}
+
 .tag-list li .size1 {
     color: #aaa;
+}
+
+.tag-list li .size1:hover {
+    color: #77ac45;
 }

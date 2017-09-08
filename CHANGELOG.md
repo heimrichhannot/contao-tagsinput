@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.13] - 2017-09-08
+
+### Fixed
+- css
+
 ## [2.1.12] - 2017-09-08
 
 ### Added
@@ -30,7 +35,7 @@ All notable changes to this project will be documented in this file.
 - fixed `jquery` js path for contao 4
 
 ## [2.1.6] - 2017-06-19
-- fixed `remote` handling 
+- fixed `remote` handling
 
 ## [2.1.5] - 2017-06-14
 - fixed ja inclusion for contao 4
