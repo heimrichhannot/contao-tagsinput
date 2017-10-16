@@ -126,9 +126,6 @@
                     $input.tagsinput('input').attr('placeholder', placeholder);
                 }
 
-                // // store tt-hint width to adjust tt-input after typing, adding and leaving field
-                var hintWidth = $input.tagsinput('input').width();
-
                 // restore selected values with full attributes
                 if ($input.is('select')) {
                     $input.find('option:selected').each(function() {
@@ -146,11 +143,6 @@
                         }
 
                         e.preventDefault();
-
-                        // restore tt-input width
-                        if (typeof placeholder === 'undefined' || placeholder.length > 0) {
-                            $input.tagsinput('input').width(hintWidth);
-                        }
                     }
                 });
 
@@ -169,12 +161,6 @@
 
                         // reset the typeahead dropdown preselection
                         $input.tagsinput('input').typeahead('val', '');
-
-                        // restore tt-input width
-                        if (typeof placeholder === 'undefined' || placeholder.length > 0) {
-                            $input.tagsinput('input').width(hintWidth);
-                        }
-
                     }
                 });
 
