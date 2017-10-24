@@ -57,25 +57,3 @@
 .styled_select.tl_tagsinput {
     display: none;
 }
-
-.isContao4 .bootstrap-tagsinput {
-    padding: 5px 6px 2px;
-}
-
-.isContao4 .bootstrap-tagsinput .label {
-    font-size: .875rem;
-    color: #222;
-    background: #eaeaea;
-    border: none;
-    padding: 5px 10px;
-    text-shadow: none;
-}
-
-.isContao4 .bootstrap-tagsinput .label:hover {
-    background: #c33;
-    color: #fff;
-}
-
-.isContao4 .bootstrap-tagsinput .tag [data-role="remove"]:hover {
-    box-shadow: none;
-}

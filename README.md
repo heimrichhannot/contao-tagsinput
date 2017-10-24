@@ -26,6 +26,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
     'eval'      => array
     (
         'freeInput'   => false
+        'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -48,6 +49,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 		'maxChars'        => 12,
 		'trimValue'       => true,
 		'allowDuplicates' => true,
+		'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -62,7 +64,8 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
     'sql'       => "varchar(255) NOT NULL default ''",
     'eval'      => array
     (
-        'freeInput'   => true
+        'freeInput'   => true,
+        'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -78,7 +81,8 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
     'eval'      => array
     (
         'multiple'    => true,
-        'freeInput'   => true
+        'freeInput'   => true,
+        'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -103,7 +107,8 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
             'queryPattern' => '%QUERY%', 
             'foreignKey'   => '%parentTable%.id',
             'limit'        => 10
-        )
+        ),
+        'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -145,7 +150,8 @@ To provide a custom query pattern for the LIKE search, simply add a custom `quer
                 'type'      => 'community',
                 'published' => false
             )
-        )
+        ),
+        'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -172,6 +178,7 @@ The `tagField` should be the field from the `save_tags` table where the user inp
             'limit'        => 10
         ),
         'tags_callback' => array(array('MyClass', 'addTagAttributes')),
+        'tl_class' => 'w50 autoheight'
     ),
 ),
 ```

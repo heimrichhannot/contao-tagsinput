@@ -1,0 +1,22 @@
+.bootstrap-tagsinput {
+    padding: 3px 4px 0px;
+    margin-bottom: 0;
+}
+
+.bootstrap-tagsinput .label {
+    font-size: .875rem;
+    color: #222;
+    background: #eaeaea;
+    border: none;
+    padding: 4px 10px;
+    text-shadow: none;
+}
+
+.bootstrap-tagsinput .label:hover {
+    background: #c33;
+    color: #fff;
+}
+
+.bootstrap-tagsinput .tag [data-role="remove"]:hover {
+    box-shadow: none;
+}

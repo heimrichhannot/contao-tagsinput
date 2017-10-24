@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.1.13] - 2017-09-
+## [2.1.14] - 2017-10-24
+
+### Fixed
+- contao 4 back end styles
+
+## [2.1.13] - 2017-10-16
 
 ### Added
 - tag list weights style
