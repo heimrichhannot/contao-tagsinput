@@ -1,6 +1,8 @@
 .bootstrap-tagsinput {
-    padding: 3px 4px 0px;
+    padding: 4px 4px 1px;
     margin-bottom: 0;
+    box-shadow: none;
+    border-radius: 2px;
 }
 
 .bootstrap-tagsinput .label {
