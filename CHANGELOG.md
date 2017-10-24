@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.17] - 2017-10-24
+
+### Changed
+- removed is is_numeric check when comparing value with tag in `TagsInput::setValuesByOptions` otherwise `de` for example in list of languages will never be set active
+
 ## [2.1.16] - 2017-10-24
 
 ### Fixed

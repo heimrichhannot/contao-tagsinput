@@ -160,7 +160,7 @@ class TagsInput extends \Widget
                 // set value for existing tags
                 if (array_key_exists('value', $v)) {
                     // check options against numeric key or string value
-                    if ((is_numeric($strTag) && $strTag == $v['value']) || $strTag == $v['label']) {
+                    if ($strTag == $v['value'] || $strTag == $v['label']) {
                         if ($this->multiple) {
                             $values[$key] = $v['value'];
                         } else {
