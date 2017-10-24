@@ -1,10 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.1.14] - 2017-10-24
+## [2.1.15] - 2017-10-24
 
 ### Fixed
 - contao 4 back end styles
+
+## [2.1.14] - 2017-10-16
+
+### Fixed
 - fixed tagsinput empty width (placeholder)
 
 ## [2.1.13] - 2017-10-16
