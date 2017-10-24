@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - contao 4 back end styles
+- fixed tagsinput empty width (placeholder)
 
 ## [2.1.13] - 2017-10-16
 
