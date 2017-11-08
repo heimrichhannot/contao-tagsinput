@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.19] - 2017-11-08
+
+### Fixed
+- load back end tagsinput css and js only in back end mode
+
 ## [2.1.18] - 2017-11-06
 
 ### Changed
