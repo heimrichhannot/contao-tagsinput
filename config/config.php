@@ -40,13 +40,14 @@ if (\HeimrichHannot\Haste\Util\Container::isBackend()) {
  * CSS
  */
 $GLOBALS['TL_CSS']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
-if (version_compare(VERSION, '4.0', '>=') && version_compare(VERSION, '5.0', '<')) {
-    $GLOBALS['TL_CSS']['tagsinput-be-contao4'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be-contao4.css';
-}
 
 if (\HeimrichHannot\Haste\Util\Container::isBackend()) {
     $GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
     $GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
+
+    if (version_compare(VERSION, '4.0', '>=') && version_compare(VERSION, '5.0', '<')) {
+        $GLOBALS['TL_CSS']['tagsinput-be-contao4'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be-contao4.css';
+    }
 }
 
 
