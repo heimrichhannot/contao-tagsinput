@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - load back end tagsinput css and js only in back end mode
+- `Request.Contao` does not exist in contao 4, check if `undefined`
 
 ## [2.1.18] - 2017-11-06
 

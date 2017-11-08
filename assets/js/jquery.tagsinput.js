@@ -238,7 +238,7 @@
 
     if (window.MooTools) {
         // extend mootools ajax request and invoke TagsInputContaoBackend.ajaxComplete() onsuccess
-        var classes = [Request, Request.Contao, Request.HTML, Request.JSON],
+        var classes = [Request, Request.HTML, Request.JSON],
             // store reference to original methods
             orig = {
                 onSuccess: Request.prototype.onSuccess,
@@ -256,6 +256,11 @@
                     orig.onFailure.apply(this, arguments);
                 },
             };
+
+        // contao 3 support
+        if (typeof Request.Contao !== 'undefined') {
+            classes.push(Request.Contao);
+        }
 
         classes.invoke('implement', changes);
     }
