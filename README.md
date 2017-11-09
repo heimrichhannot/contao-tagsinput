@@ -196,6 +196,7 @@ highlightOptions | First 5 options | Enter the array that returns highlight opti
 highlightOptionsCallback | First 5 options | Enter a valid callback, that returns all highlighted options as array, when focus input without typing someting in input. | false
 limit | 5 | Limit the options when typed somethin in the input. | false
 showTagList | false | Displays a tag list with all available options (local only atm) | false
+tagListWeightClassCount | 6 | Specifies how many css classes are used for weighting (predefined styles are available for count up to 10) | false
 option_weights | null | Expects a callable function returning an array where keys are tag values and values are counts or this array itself | false
 option_weights_callback | null | Expects an array like ['MyClass', 'getWeights'] referencing a function returning an array where keys are tag values and values are counts or this array itself | false
 

@@ -1,0 +1,94 @@
+.twitter-typeahead {
+  float: left;
+
+  .tt-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+  }
+
+  .tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #333333;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &.tt-cursor {
+      color: #ffffff;
+      text-decoration: none;
+      outline: 0;
+      background-color: #428bca;
+    }
+  }
+
+  .tt-input {
+    line-height: 20px;
+    margin-bottom: 3px;
+  }
+
+  .tt-hint {
+    line-height: 20px;
+  }
+}
+
+.tt-tag-list {
+  margin: 10px 0;
+
+  li {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  @for $i from 1 through 10 {
+    &[data-class-count="#{$i}"] {
+      @for $j from 1 through $i {
+        li .size#{$j} {
+          $number: 60 * (1 - $j/$i);
+          $percentage: $number * 1%;
+          color: lighten(#222, $percentage);
+        }
+      }
+    }
+  }
+}
+
+.tag-list li .size4 {
+  font-weight: bold;
+}
+
+.tag-list li .size2, .tag-list li .size3 {
+  color: #666;
+}
+
+.tag-list li .size2:hover, .tag-list li .size3:hover {
+  color: #77ac45;
+}
+
+.tag-list li .size1 {
+  color: #aaa;
+}
+
+.tag-list li .size1:hover {
+  color: #77ac45;
+}

@@ -384,7 +384,9 @@ class TagsInput extends \Widget
         );
 
         if ($this->arrConfiguration['showTagList']) {
-            $strTagList = '<ul class="tag-list">';
+            $intClassCount = $this->arrConfiguration['tagListWeightClassCount'] ?: 6;
+
+            $strTagList = '<ul class="tt-tag-list" data-class-count="' . $intClassCount . '">';
 
             if (isset($this->arrConfiguration['option_weights']) || isset($this->arrConfiguration['option_weights_callback'])) {
                 $arrTagWeights = \HeimrichHannot\Haste\Dca\General::getConfigByArrayOrCallbackOrFunction(
@@ -399,7 +401,7 @@ class TagsInput extends \Widget
                 }
 
                 foreach ($arrTagWeights as $strTag => $intCount) {
-                    $strTagList .= '<li><a class="' . static::getTagSizeClass($intCount, $intMaxCount) .
+                    $strTagList .= '<li><a class="' . static::getTagSizeClass($intCount, $intMaxCount, $intClassCount) .
                         '" href="#" title="' . $intCount . '">' . $strTag . '</a></li>';
                 }
             } else {
@@ -416,10 +418,10 @@ class TagsInput extends \Widget
         return $strWidget;
     }
 
-    public static function getTagSizeClass($intCount, $intMaxCount)
+    public static function getTagSizeClass($intCount, $intMaxCount, $intClassCount)
     {
-        for ($i = 3; $i >= 0; $i--) {
-            if ($intCount >= $i * $intMaxCount / 4) {
+        for ($i = $intClassCount - 1; $i >= 0; $i--) {
+            if ($intCount >= $i * $intMaxCount / $intClassCount) {
                 return 'size' . ($i + 1);
             }
         }

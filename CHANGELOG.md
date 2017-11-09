@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - 2017-11-09
+
+### Changed
+- tag list css class behavior
+
 ## [2.1.20] - 2017-11-08
 
 ### Fixed
