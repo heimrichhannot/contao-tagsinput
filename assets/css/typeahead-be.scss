@@ -67,6 +67,10 @@
           $number: 60 * (1 - $j/$i);
           $percentage: $number * 1%;
           color: lighten(#222, $percentage);
+
+          &:hover {
+            color: darken(lighten(#222, $percentage), 10%);
+          }
         }
       }
     }

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.1] - 2017-11-09
+
+### Added
+- tag list css class -> hover
+
 ## [2.2.0] - 2017-11-09
 
 ### Changed
