@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.2] - 2017-11-27
+
+### Changed
+- extracted count from title to brackets
+
 ## [2.2.1] - 2017-11-09
 
 ### Added

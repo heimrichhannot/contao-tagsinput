@@ -402,7 +402,7 @@ class TagsInput extends \Widget
 
                 foreach ($arrTagWeights as $strTag => $intCount) {
                     $strTagList .= '<li><a class="' . static::getTagSizeClass($intCount, $intMaxCount, $intClassCount) .
-                        '" href="#" title="' . $intCount . '">' . $strTag . '</a></li>';
+                        '" href="#"><span>' . $strTag . '</span> (' . $intCount . ')</a></li>';
                 }
             } else {
                 foreach ($this->arrOptionsAll as $arrTag) {

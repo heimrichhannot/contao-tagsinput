@@ -191,15 +191,16 @@
             $tagInputs.each(function() {
                 var $input = $(this);
 
-                $input.siblings('.tag-list').find('a').on('click', function(e) {
+                $input.siblings('.tt-tag-list').find('a').on('click', function(e) {
                     var $link = $(this),
-                        $bubble = $input.siblings('.tl_select').find('[title="' + $link.text() + '"]');
+                        text = $link.find('span').text(),
+                        $bubble = $input.siblings('.tl_select').find('[title="' + text + '"]');
 
                     e.preventDefault();
 
                     if ($bubble.length < 1) {
                         // add value and simulate pressing tab since typeahead has no function for adding new options programmatically
-                        $input.closest('div').find('.tt-input').trigger('focus').val($link.text()).trigger($.Event('keydown', {keyCode: 9}));
+                        $input.closest('div').find('.tt-input').trigger('focus').val(text).trigger($.Event('keydown', {keyCode: 9}));
                     }
                     else {
                         $bubble.find('[data-role="remove"]').trigger('click');
