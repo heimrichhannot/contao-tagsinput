@@ -28,13 +28,10 @@ $GLOBALS['TL_FFL']['tagsinput'] = 'FormTagsInput';
 /**
  * Javascript
  */
-$GLOBALS['TL_JAVASCRIPT']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js';
-$GLOBALS['TL_JAVASCRIPT']['sortable']  = 'system/modules/tagsinput/assets/vendor/Sortable/Sortable.min.js';
-$GLOBALS['TL_JAVASCRIPT']['typeahead'] = 'system/modules/tagsinput/assets/vendor/corejs-typeahead/dist/typeahead.bundle.min.js';
-
-if (\HeimrichHannot\Haste\Util\Container::isBackend()) {
-    $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'system/modules/tagsinput/assets/js/jquery.tagsinput.min.js';
-}
+$GLOBALS['TL_JAVASCRIPT']['tagsinput']    = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js';
+$GLOBALS['TL_JAVASCRIPT']['sortable']     = 'system/modules/tagsinput/assets/vendor/Sortable/Sortable.min.js';
+$GLOBALS['TL_JAVASCRIPT']['typeahead']    = 'system/modules/tagsinput/assets/vendor/corejs-typeahead/dist/typeahead.bundle.min.js';
+$GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'system/modules/tagsinput/assets/js/jquery.tagsinput.min.js';
 
 /**
  * CSS
@@ -48,6 +45,11 @@ if (\HeimrichHannot\Haste\Util\Container::isBackend()) {
     if (version_compare(VERSION, '4.0', '>=') && version_compare(VERSION, '5.0', '<')) {
         $GLOBALS['TL_CSS']['tagsinput-be-contao4'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be-contao4.css';
     }
+}
+
+if (\HeimrichHannot\Haste\Util\Container::isFrontend()) {
+    $GLOBALS['TL_CSS']['tagsinput-fe'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css|static';
+    $GLOBALS['TL_CSS']['typeahead-fe'] = 'system/modules/tagsinput/assets/css/typeahead-fe.css|static';
 }
 
 

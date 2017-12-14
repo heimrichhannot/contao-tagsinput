@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.3] - 2017-12-14
+
+### Fixed
+- front end invocation, js and styles were not loaded due to `heimrichhannot/contao-components` changes
+
 ## [2.2.2] - 2017-11-27
 
 ### Changed
