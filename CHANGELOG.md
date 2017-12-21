@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.4] - 2017-12-21
+
+### Fixed
+- added `static` flag to javascript files
+
 ## [2.2.3] - 2017-12-14
 
 ### Fixed
