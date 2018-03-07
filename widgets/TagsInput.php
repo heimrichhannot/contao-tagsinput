@@ -615,7 +615,7 @@ class TagsInput extends \Widget
 
                 // default: iterate over all options and trigger tags_callback
                 if (is_array($this->arrOptions)) {
-                    $i = count($this->varValue); // add new values after last varValue index
+                    $i = is_array($this->varValue) ? count($this->varValue) : 0; // add new values after last varValue index
 
                     foreach ($this->arrOptions as $arrDefaultOption) {
                         if (($arrOption = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label'])) === false) {

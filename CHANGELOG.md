@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.5] - 2018-03-07
+
+### Fixed
+- #1, catch if $this->varValue is not countable
+
 ## [2.2.4] - 2017-12-21
 
 ### Fixed
