@@ -572,7 +572,7 @@ class TagsInput extends \Widget
 
     protected function getOptions(array $arrValues = [])
     {
-        $arrOptions = [];
+        $arrChoices = [];
 
         switch ($this->mode) {
             case static::MODE_REMOTE:
@@ -591,7 +591,6 @@ class TagsInput extends \Widget
 
                 break;
             default:
-
                 // add free input values from $this->varValue
                 if ($this->arrConfiguration['freeInput'] && !empty($this->varValue)) {
                     if (is_array($this->varValue)) {
@@ -600,50 +599,63 @@ class TagsInput extends \Widget
                                 continue;
                             }
 
-                            $arrOptions[] = $arrOption;
+                            $arrChoices[] = $arrOption;
                         }
+
+                        $arrChoices = $this->addDefaultOptions($arrChoices);
 
                         break;
                     }
 
                     if (($arrOption = $this->generateOption($this->varValue, $this->varValue)) !== false) {
-                        $arrOptions[] = $arrOption;
+                        $arrChoices[] = $arrOption;
                     }
 
+                    $arrChoices = $this->addDefaultOptions($arrChoices);
                     break;
                 }
 
-                // default: iterate over all options and trigger tags_callback
-                if (is_array($this->arrOptions)) {
-                    $i = is_array($this->varValue) ? count($this->varValue) : 0; // add new values after last varValue index
-
-                    foreach ($this->arrOptions as $arrDefaultOption) {
-                        if (($arrOption = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label'])) === false) {
-                            continue;
-                        }
-
-                        // default options should be sorted by given value order if value is set
-                        if (!empty($this->varValue)) {
-                            if (is_array($this->varValue) && ($pos = array_search($arrDefaultOption['value'], $this->varValue)) !== false) {
-                                $arrOptions[$pos] = $arrOption;
-                                continue;
-                            }
-                        }
-
-                        // store value as key for sorting by $this->varValue or if single varValue
-                        $arrOptions[$i] = $arrOption;
-                        $i++;
-
-                    }
-
-                    // sort by keys
-                    ksort($arrOptions);
-                }
+                $arrChoices = $this->addDefaultOptions($arrChoices);
 
                 break;
         }
 
-        return $arrOptions;
+        return $arrChoices;
+    }
+
+    protected function addDefaultOptions(array $arrChoices = [])
+    {
+        if (!is_array($this->arrOptions)) {
+            return $arrChoices;
+        }
+
+        $i = is_array($this->varValue) ? count($this->varValue) : 0; // add new values after last varValue index
+        $arrSkip = [];
+
+        foreach ($this->arrOptions as $arrDefaultOption) {
+            if (($arrOption = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label'])) === false) {
+                continue;
+            }
+
+            // default options should be sorted by given value order if value is set
+            if (!empty($this->varValue)) {
+                if (is_array($this->varValue) && ($pos = array_search($arrDefaultOption['value'], $this->varValue)) !== false && !in_array($pos, $arrSkip)) {
+                    $arrChoices[$pos] = $arrOption;
+                    $arrSkip[] = $pos;
+                    continue;
+                }
+            }
+
+            // store value as key for sorting by $this->varValue or if single varValue
+            $arrChoices[$i] = $arrOption;
+            $i++;
+
+        }
+
+        // sort by keys
+        ksort($arrChoices);
+
+        return $arrChoices;
     }
 
     protected function getActiveRemoteOptionsFromLocalOptions(array $arrValues = [])

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.6] - 2018-05-31
+
+### Fixed
+- freeinput issue
+
 ## [2.2.5] - 2018-03-07
 
 ### Fixed
