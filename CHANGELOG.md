@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.2.7] - 2019-11-12
+
+- fixed empty values issue
+
 ## [2.2.6] - 2018-05-31
 
 ### Fixed

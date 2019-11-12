@@ -580,8 +580,7 @@ class TagsInput extends \Widget
 
                 // get query options from relation table
                 if (($arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) !== false) {
-
-                    return $this->getActiveRemoteOptionsFromRelationTable($arrValues, $arrRelationData);
+                    return $this->getActiveRemoteOptionsFromRelationTable(array_filter($arrValues), $arrRelationData);
                 }
 
                 // get query options from options or options_callback label value
@@ -710,7 +709,7 @@ class TagsInput extends \Widget
     }
 
 
-    protected function getActiveRemoteOptionsFromRelationTable(array $arrValues = [], array $arrRelationData)
+    protected function getActiveRemoteOptionsFromRelationTable(array $arrValues, array $arrRelationData)
     {
         $arrOptions = [];
 
