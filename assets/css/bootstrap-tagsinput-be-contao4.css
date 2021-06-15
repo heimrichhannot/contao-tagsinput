@@ -22,3 +22,7 @@
 .bootstrap-tagsinput .tag [data-role="remove"]:hover {
     box-shadow: none;
 }
+
+.bootstrap-tagsinput.tl_select {
+    height: auto;
+}
