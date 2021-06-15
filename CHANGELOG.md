@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.2.7] - 2021-06-15
+## [2.2.8] - 2021-06-15
 
 - fixed style issue
 
