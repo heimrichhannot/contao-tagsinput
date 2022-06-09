@@ -173,8 +173,8 @@ class TagsInput extends \Widget
                 }
             }
 
-
-            if (!$blnFound && ($intId = $this->addNewTag($strTag)) > 0 || $freeInput) {
+            $intId = $this->addNewTag($strTag);
+            if (!$blnFound && ($intId  > 0) || $freeInput) {
                 $value = ($freeInput && !$intId) ? $strTag : $intId;
 
                 if ($this->multiple) {
@@ -204,7 +204,7 @@ class TagsInput extends \Widget
             return false;
         }
 
-        if (($arrSaveConfig = $this->arrConfiguration['save_tags']) !== null && isset($arrSaveConfig['table'])) {
+        if (($arrSaveConfig = ($this->arrConfiguration['save_tags'] ?? null)) !== null && isset($arrSaveConfig['table'])) {
             $strTable      = $arrSaveConfig['table'];
             $strModelClass = \Model::getClassFromTable($arrSaveConfig['table']);
 
@@ -226,7 +226,7 @@ class TagsInput extends \Widget
             $objModel->tstamp = 0;
 
             // overwrite model with defaults from dca
-            if (is_array($arrSaveConfig['defaults'])) {
+            if (is_array($arrSaveConfig['defaults'] ?? null)) {
                 $objModel->setRow($arrSaveConfig['defaults']);
             }
 
@@ -321,8 +321,8 @@ class TagsInput extends \Widget
                     $this->arrSelectedOptions[] = sprintf(
                         '<option value="%s"%s%s>%s</option>',
                         is_numeric($arrOption['value']) ? $arrOption['value'] : specialchars($arrOption['label']),
-                        (($arrOption['class'] != '') ? 'class="' . $arrOption['class'] . '"' : ''),
-                        (($arrOption['target'] != '') ? 'data-target="' . $arrOption['class'] . '"' : ''),
+                        (!empty($arrOption['class']) ? 'class="' . $arrOption['class'] . '"' : ''),
+                        (!empty($arrOption['target']) ? 'data-target="' . $arrOption['class'] . '"' : ''),
                         $arrOption['label']
                     );
                 }
@@ -338,7 +338,7 @@ class TagsInput extends \Widget
 
         $this->addAttribute('data-free-input', ($this->canInputFree() !== false ? 'true' : 'false'));
 
-        $strMode = $this->arrConfiguration['mode'] ?: static::MODE_LOCAL;
+        $strMode = !empty($this->arrConfiguration['mode']) ? $this->arrConfiguration['mode'] : static::MODE_LOCAL;
 
         $this->addAttribute('data-mode', $strMode);
 
@@ -359,7 +359,7 @@ class TagsInput extends \Widget
                 break;
         }
 
-        if ($this->arrConfiguration['placeholder']) {
+        if ($this->arrConfiguration['placeholder'] ?? false) {
             $this->addAttribute('data-placeholder', $this->arrConfiguration['placeholder']);
         }
     }
@@ -383,8 +383,8 @@ class TagsInput extends \Widget
             $this->wizard
         );
 
-        if ($this->arrConfiguration['showTagList']) {
-            $intClassCount = $this->arrConfiguration['tagListWeightClassCount'] ?: 6;
+        if ($this->arrConfiguration['showTagList'] ?? false) {
+            $intClassCount = $this->arrConfiguration['tagListWeightClassCount'] ?? 6;
 
             $strTagList = '<ul class="tt-tag-list" data-class-count="' . $intClassCount . '">';
 
@@ -821,7 +821,7 @@ class TagsInput extends \Widget
         ];
 
         // Call tags_callback
-        if (is_array($this->arrConfiguration['tags_callback'])) {
+        if (is_array($this->arrConfiguration['tags_callback'] ?? null)) {
             foreach ($this->arrConfiguration['tags_callback'] as $callback) {
                 if (is_array($callback)) {
                     $this->import($callback[0]);

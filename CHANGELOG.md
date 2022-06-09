@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - 2022-06-09
+- Changed: removed php 5 support
+- Fixed: warnings with php 8
+
 ## [2.3.0] - 2021-08-31
 
 - Added: support for php 8
