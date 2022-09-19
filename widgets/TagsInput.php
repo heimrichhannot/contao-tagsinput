@@ -98,7 +98,7 @@ class TagsInput extends \Widget
      */
     protected function isSelected($arrOption)
     {
-        if (empty($this->varValue) && empty($_POST) && $arrOption['default']) {
+        if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null)) {
             return static::optionSelected(1, 1);
         }
 
