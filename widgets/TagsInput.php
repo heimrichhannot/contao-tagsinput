@@ -856,7 +856,7 @@ class TagsInput extends \Widget
                 }
 
                 // disable if no save_tags configuration isset
-                if (($arrSaveConfig = $this->arrConfiguration['save_tags']) === null && !isset($arrSaveConfig['table'])) {
+                if (($arrSaveConfig = ($this->arrConfiguration['save_tags'] ?? null)) === null && !isset($arrSaveConfig['table'])) {
                     $blnCheck = false;
                 }
 
