@@ -9,6 +9,7 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
+use Contao\System;
 
 /**
  * Constants
@@ -38,7 +39,9 @@ $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'system/modules/tagsinput/assets/js/
  */
 $GLOBALS['TL_CSS']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
 
-if (\HeimrichHannot\Haste\Util\Container::isBackend()) {
+$utils = System::getContainer()->get('huh.utils.container');
+
+if ($utils->isBackend()) {
     $GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
     $GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
 
@@ -47,7 +50,7 @@ if (\HeimrichHannot\Haste\Util\Container::isBackend()) {
     }
 }
 
-if (\HeimrichHannot\Haste\Util\Container::isFrontend()) {
+if ($utils->isFrontend()) {
     $GLOBALS['TL_CSS']['tagsinput-fe'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css|static';
     $GLOBALS['TL_CSS']['typeahead-fe'] = 'system/modules/tagsinput/assets/css/typeahead-fe.css|static';
 }

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Contao Open Source CMS
  *
@@ -9,7 +8,13 @@
  * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
-class TagsInput extends \Widget
+
+use Contao\Controller;
+use Contao\Model;
+use Contao\StringUtil;
+use Contao\Widget;
+
+class TagsInput extends Widget
 {
     /**
      * Submit user input
@@ -383,14 +388,35 @@ class TagsInput extends \Widget
             $this->wizard
         );
 
+        $getConfigByArrayOrCallbackOrFunction = function (array $arrArray, $strProperty, array $arrArgs = [])
+        {
+            if (isset($arrArray[$strProperty])) {
+                return $arrArray[$strProperty];
+            }
+
+            if (is_array($arrArray[$strProperty . '_callback']))
+            {
+                $arrCallback = $arrArray[$strProperty.'_callback'];
+                $instance = Controller::importStatic($arrCallback[0]);
+                return call_user_func_array([$instance, $arrCallback[1]], $arrArgs);
+            }
+            elseif (is_callable($arrArray[$strProperty . '_callback']))
+            {
+                return call_user_func_array($arrArray[$strProperty . '_callback'], $arrArgs);
+            }
+
+            return null;
+        };
+
         if ($this->arrConfiguration['showTagList'] ?? false) {
             $intClassCount = $this->arrConfiguration['tagListWeightClassCount'] ?? 6;
 
             $strTagList = '<ul class="tt-tag-list" data-class-count="' . $intClassCount . '">';
 
             if (isset($this->arrConfiguration['option_weights']) || isset($this->arrConfiguration['option_weights_callback'])) {
-                $arrTagWeights = \HeimrichHannot\Haste\Dca\General::getConfigByArrayOrCallbackOrFunction(
-                    (array)$this->arrConfiguration, 'option_weights', [$this->objDca]);
+                $arrTagWeights = $getConfigByArrayOrCallbackOrFunction(
+                    (array)$this->arrConfiguration, 'option_weights', [$this->objDca]
+                );
 
                 $intMaxCount = 0;
 
@@ -538,9 +564,10 @@ class TagsInput extends \Widget
 
         $strField = $objDca->field = \Input::post('name');
 
-        \Controller::loadDataContainer($objDca->table);
+        Controller::loadDataContainer($objDca->table);
 
-        $objActiveRecord = \HeimrichHannot\Haste\Dca\General::getModelInstance($objDca->table, $objDca->id);
+        $modelClass = Model::getClassFromTable($objDca->table);
+        $objActiveRecord = class_exists($modelClass) ? $modelClass::findByPk($objDca->id) : null;
 
         if ($objActiveRecord === null) {
             $this->log('No active record for "' . $strField . '" found (possible SQL injection attempt)', __METHOD__, TL_ERROR);
@@ -576,7 +603,7 @@ class TagsInput extends \Widget
 
         switch ($this->mode) {
             case static::MODE_REMOTE:
-                \Controller::loadDataContainer($this->strTable);
+                Controller::loadDataContainer($this->strTable);
 
                 // get query options from relation table
                 if (($arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) !== false) {
@@ -757,7 +784,7 @@ class TagsInput extends \Widget
      */
     protected function getRelationData($varValue)
     {
-        $arrRelation = trimsplit('.', $varValue);
+        $arrRelation = StringUtil::trimsplit('.', $varValue);
 
         if (is_array($arrRelation) && !$arrRelation[0]) {
             return false;
@@ -766,8 +793,9 @@ class TagsInput extends \Widget
         $strTable = $arrRelation[0];
         $strField = $arrRelation[1];
 
-        if (\HeimrichHannot\Haste\Util\StringUtil::startsWith($arrRelation[0], '%') && \HeimrichHannot\Haste\Util\StringUtil::endsWith($arrRelation[0], '%')) {
-            $strField = str_replace('%', '', $arrRelation[0]);
+        if (preg_match("/^%.*%$/", $strTable))
+        {
+            $strField = str_replace('%', '', $strTable);
 
             if (!$this->activeRecord->{$strField}) {
                 return false;
@@ -776,7 +804,7 @@ class TagsInput extends \Widget
             $strTable = $this->activeRecord->{$strField};
         }
 
-        $strModelClass = \Model::getClassFromTable($strTable);
+        $strModelClass = Model::getClassFromTable($strTable);
 
         if (!class_exists($strModelClass)) {
             return false;
