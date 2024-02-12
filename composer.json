@@ -23,16 +23,16 @@
     "issues": "https://github.com/heimrichhannot/contao-tagsinput/issues"
   },
   "require": {
-    "php": "~7.0 || ^8.0",
+    "php": "^7.4 || ^8.0",
     "contao/core-bundle": "~4.9 || ^5.0",
     "contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
-    "heimrichhannot/contao-components": "^2.0",
+    "heimrichhannot/contao-encore-contracts": "^1.0",
     "heimrichhannot/contao-utils-bundle": "^2.233 || ^3.0@beta"
   },
   "autoload": {
-    "classmap": [
-      ""
-    ]
+    "psr-4": {
+      "HeimrichHannot\\TagsInput\\": "src/"
+    }
   },
   "extra": {
     "contao": {

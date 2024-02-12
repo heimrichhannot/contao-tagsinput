@@ -2,12 +2,14 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2015 Heimrich & Hannot GmbH
+ * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
  * @package tagsinput
  * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
+
+namespace HeimrichHannot\TagsInput;
 
 use Contao\Controller;
 use Contao\Model;
@@ -589,7 +591,7 @@ class TagsInput extends Widget
 
         switch ($strAction) {
             case static::ACTION_FETCH_REMOTE_OPTIONS:
-                $objWidget = new \TagsInput(\Widget::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
+                $objWidget = new tagsinput\widgets\TagsInput(\Widget::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
                 $return    = array_values($objWidget->getRemoteOptionsFromQuery(\Input::post('query')));
                 break;
         }
@@ -899,3 +901,5 @@ class TagsInput extends Widget
         return $blnCheck;
     }
 }
+
+class_alias(TagsInput::class, 'TagsInput');
