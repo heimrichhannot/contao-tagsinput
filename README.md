@@ -19,7 +19,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'sql'       => "varchar(255) NOT NULL default ''",
     'options'   => array('boston', 'berlin', 'hamburg', 'london'),
@@ -36,7 +36,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'sql'       => "blob NULL",
     'options'   => array('boston', 'berlin', 'hamburg', 'london'),
@@ -45,11 +45,11 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
         'multiple'        => true,
         'freeInput'       => true,
         'multiple'        => true,
-		'maxTags'         => 3,
-		'maxChars'        => 12,
-		'trimValue'       => true,
-		'allowDuplicates' => true,
-		'tl_class' => 'w50 autoheight'
+        'maxTags'         => 3,
+        'maxChars'        => 12,
+        'trimValue'       => true,
+        'allowDuplicates' => true,
+        'tl_class' => 'w50 autoheight'
     )
 ),
 ```
@@ -59,7 +59,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'sql'       => "varchar(255) NOT NULL default ''",
     'eval'      => array
@@ -75,7 +75,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'sql'       => "blob NULL",
     'eval'      => array
@@ -92,7 +92,7 @@ Contao port of [Bootstrap Tags Input](http://timschlechter.github.io/bootstrap-t
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'sql'       => "int(10) unsigned NOT NULL default '0'",
     'eval'      => array(
@@ -124,7 +124,7 @@ To provide a custom query pattern for the LIKE search, simply add a custom `quer
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'sql'       => "blob NULL",
     'eval'      => array(
@@ -164,7 +164,7 @@ The `tagField` should be the field from the `save_tags` table where the user inp
 ```
 'locations'         => array
 (
-	'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
+    'label'     => &$GLOBALS['TL_LANG']['tl_entity_lock']['locations'],
     'inputType' => 'tagsinput',
     'options'   => array('boston', 'berlin', 'hamburg', 'london'),
     'sql'       => "blob NULL",
@@ -227,16 +227,16 @@ The tags_callback should be a valid callback that can be used to manipulate the 
 // tags_callback example callback
 class tl_member_custom extends \Backend
 {
-	public function addTagAttributes($arrOption, DataContainer $dc)
-	{
-		$objTag = MyTagsModel::findByPk($arrOption['value']);
+    public function addTagAttributes($arrOption, DataContainer $dc)
+    {
+        $objTag = MyTagsModel::findByPk($arrOption['value']);
 
-		if(!$objTag->published)
-		{
-			$arrOption['class'] .= ' new';
-		}
+        if (!$objTag->published)
+        {
+            $arrOption['class'] .= ' new';
+        }
 
-		return $arrOption;
-	}
+        return $arrOption;
+    }
 }
 ```

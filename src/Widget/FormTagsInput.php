@@ -2,14 +2,14 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2023 Heimrich & Hannot GmbH
+ * Copyright (c) 2024 Heimrich & Hannot GmbH
  *
  * @package tagsinput
  * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace HeimrichHannot\TagsInput;
+namespace HeimrichHannot\TagsInput\Widget;
 
 use Contao\Environment;
 use Contao\Input;

@@ -28,7 +28,15 @@ class EncoreExtension implements EncoreExtensionInterface
     public function getEntries(): array
     {
         return [
-
+            EncoreEntry::create('contao-tagsinput', 'assets/js/contao-tagsinput.js')
+                ->addJsEntryToRemoveFromGlobals('tagsinput')
+                ->addJsEntryToRemoveFromGlobals('sortable')
+                ->addJsEntryToRemoveFromGlobals('typeahead'),
+            EncoreEntry::create('contao-tagsinput-bootstrap-theme', 'assets/js/contao-tagsinput-bootstrap-theme.js')
+                ->setRequiresCss(true)
+                ->addCssEntryToRemoveFromGlobals('tagsinput')
+                ->addCssEntryToRemoveFromGlobals('tagsinput-fe')
+                ->addCssEntryToRemoveFromGlobals('typeahead-fe')
         ];
     }
 }

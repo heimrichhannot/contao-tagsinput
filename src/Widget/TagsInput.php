@@ -9,7 +9,7 @@
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
-namespace HeimrichHannot\TagsInput;
+namespace HeimrichHannot\TagsInput\Widget;
 
 use Contao\Controller;
 use Contao\Model;

@@ -1,0 +1,5 @@
+services:
+  HeimrichHannot\TagsInput\:
+    resource: '../src/{Asset,Widget}/*'
+    autowire: true
+    autoconfigure: true
