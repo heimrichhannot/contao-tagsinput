@@ -35,6 +35,11 @@
     }
   },
   "extra": {
-    "contao-manager-plugin": "HeimrichHannot\\TagsInput\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "HeimrichHannot\\TagsInput\\ContaoManager\\Plugin",
+    "contao": {
+      "sources": {
+        "": "system/modules/tagsinput"
+      }
+    }
   }
 }
