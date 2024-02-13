@@ -12,7 +12,12 @@
 namespace HeimrichHannot\TagsInput\Widget;
 
 use Contao\Controller;
+use Contao\Database;
+use Contao\DataContainer;
+use Contao\Input;
 use Contao\Model;
+use Contao\Model\Collection;
+use Contao\RequestToken;
 use Contao\StringUtil;
 use Contao\Widget;
 
@@ -31,7 +36,6 @@ class TagsInput extends Widget
      * @var string
      */
     protected $strTemplate = 'be_widget';
-
 
     /**
      * Class
@@ -87,7 +91,7 @@ class TagsInput extends Widget
                 break;
 
             case 'options':
-                $this->arrOptions = deserialize($varValue);
+                $this->arrOptions = StringUtil::deserialize($varValue);
                 break;
 
             default:
@@ -103,7 +107,7 @@ class TagsInput extends Widget
      *
      * @return string The "selected" attribute or an empty string
      */
-    protected function isSelected($arrOption)
+    protected function isSelected($arrOption): string
     {
         if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null)) {
             return static::optionSelected(1, 1);
@@ -145,6 +149,10 @@ class TagsInput extends Widget
         $this->varValue = $varInput;
     }
 
+    /**
+     * @param array|int|mixed $varValue
+     * @return array|int|mixed
+     */
     protected function setValuesByOptions($varValue)
     {
         $values    = [];
@@ -157,41 +165,47 @@ class TagsInput extends Widget
         // add remote options
         $this->arrOptions = $this->getOptions($varValue);
 
-        foreach ($varValue as $key => $strTag) {
-            $blnFound = false;
+        foreach ($varValue as $key => $tag)
+        {
+            $found = false;
 
             // convert html entities back, otherwise compare for html entities will fail and tag never added
-            $strTag = \Input::decodeEntities($strTag);
+            $tag = Input::decodeEntities($tag);
 
-            foreach ($this->arrOptions as $v) {
+            foreach ($this->arrOptions as $v)
+            {
                 // set value for existing tags
-                if (array_key_exists('value', $v)) {
+                if (array_key_exists('value', $v))
+                {
                     // check options against numeric key or string value
-                    if ($strTag == $v['value'] || $strTag == $v['label']) {
+                    if ($tag == $v['value'] || $tag == $v['label'])
+                    {
                         if ($this->multiple) {
                             $values[$key] = $v['value'];
                         } else {
                             $values = $v['value'];
                         }
 
-                        $blnFound = true;
+                        $found = true;
                         break;
                     }
                 }
             }
 
-            $intId = $this->addNewTag($strTag);
-            if (!$blnFound && ($intId  > 0) || $freeInput) {
-                $value = ($freeInput && !$intId) ? $strTag : $intId;
+            $intId = $this->addNewTag($tag);
+
+            if (!$found && ($intId !== null) || $freeInput)
+            {
+                $val = ($freeInput && !$intId) ? $tag : $intId;
 
                 if ($this->multiple) {
-                    $values[$key] = $value;
+                    $values[$key] = $val;
                 } else {
-                    $values = $value;
+                    $values = $val;
                 }
 
                 // add new value to options
-                $this->arrOptions[] = ['value' => $value, 'label' => $strTag];
+                $this->arrOptions[] = ['value' => $val, 'label' => $tag];
             }
         }
 
@@ -200,48 +214,47 @@ class TagsInput extends Widget
 
     /**
      * Add a new tag
-     *
-     * @param $strTag
-     *
-     * @return bool
      */
-    protected function addNewTag($strTag)
+    protected function addNewTag(string $tag): ?int
     {
-        if ($strTag == '') {
-            return false;
+        if ($tag == '') {
+            return null;
         }
 
-        if (($arrSaveConfig = ($this->arrConfiguration['save_tags'] ?? null)) !== null && isset($arrSaveConfig['table'])) {
-            $strTable      = $arrSaveConfig['table'];
-            $strModelClass = \Model::getClassFromTable($arrSaveConfig['table']);
-
-            if (!class_exists($strModelClass)) {
-                $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidTagsModel'], $strTable));
-
-                return false;
-            }
-
-            $strTagField = $arrSaveConfig['tagField'];
-
-            if (!\Database::getInstance()->fieldExists($strTagField, $arrSaveConfig['table'])) {
-                $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidTagsField'], $strTagField, $strTable));
-
-                return false;
-            }
-
-            $objModel         = new $strModelClass();
-            $objModel->tstamp = 0;
-
-            // overwrite model with defaults from dca
-            if (is_array($arrSaveConfig['defaults'] ?? null)) {
-                $objModel->setRow($arrSaveConfig['defaults']);
-            }
-
-            $objModel->{$strTagField} = $strTag;
-            $objModel->save();
-
-            return $objModel->id;
+        $arrSaveConfig = $this->arrConfiguration['save_tags'] ?? null;
+        if ($arrSaveConfig === null || !isset($arrSaveConfig['table'])) {
+            return null;
         }
+
+        $table = $arrSaveConfig['table'];
+        $modelClass = Model::getClassFromTable($arrSaveConfig['table']);
+
+        if (!class_exists($modelClass))
+        {
+            $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidTagsModel'], $table));
+            return null;
+        }
+
+        $strTagField = $arrSaveConfig['tagField'];
+
+        if (!Database::getInstance()->fieldExists($strTagField, $arrSaveConfig['table']))
+        {
+            $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidTagsField'], $strTagField, $table));
+            return null;
+        }
+
+        $objModel         = new $modelClass();
+        $objModel->tstamp = 0;
+
+        // overwrite model with defaults from dca
+        if (is_array($arrSaveConfig['defaults'] ?? null)) {
+            $objModel->setRow($arrSaveConfig['defaults']);
+        }
+
+        $objModel->{$strTagField} = $tag;
+        $objModel->save();
+
+        return $objModel->id;
     }
 
     protected function prepare()
@@ -308,13 +321,12 @@ class TagsInput extends Widget
 
         // set highlights if not in freeInput mode
         if (!empty($arrHighlights) && $this->canInputFree()) {
-            foreach ($arrHighlights as $strKey => $varValue) {
+            foreach ($arrHighlights as $varValue) {
                 $this->arrHighlights[] = $this->generateOption($varValue, $varValue);
             }
         }
 
-
-        foreach ($this->arrOptions as $strKey => $arrOption) {
+        foreach ($this->arrOptions as $arrOption) {
             if (isset($arrOption['value'])) {
                 $this->arrTags[] = $arrOption;
 
@@ -336,6 +348,10 @@ class TagsInput extends Widget
             }
         }
 
+        $this->arrHighlights = array_map(function ($v) {
+            return $v !== null;
+        }, $this->arrHighlights);
+
         if (!empty($this->arrHighlights)) {
             $this->addAttribute('data-highlight', 1);
             $this->addAttribute('data-highlights', htmlspecialchars(json_encode($this->arrHighlights), ENT_QUOTES, 'UTF-8'));
@@ -349,21 +365,19 @@ class TagsInput extends Widget
 
         $this->addAttribute('data-mode', $strMode);
 
-        switch ($strMode) {
-            case static::MODE_REMOTE:
-                $this->addAttribute(
-                    'data-post-data',
-                    htmlspecialchars(
-                        json_encode(
-                            [
-                                'action'        => static::ACTION_FETCH_REMOTE_OPTIONS,
-                                'name'          => $this->strId,
-                                'REQUEST_TOKEN' => \RequestToken::get(),
-                            ]
-                        )
+        if ($strMode === static::MODE_REMOTE) {
+            $this->addAttribute(
+                'data-post-data',
+                htmlspecialchars(
+                    json_encode(
+                        [
+                            'action' => static::ACTION_FETCH_REMOTE_OPTIONS,
+                            'name' => $this->strId,
+                            'REQUEST_TOKEN' => RequestToken::get(),
+                        ]
                     )
-                );
-                break;
+                )
+            );
         }
 
         if ($this->arrConfiguration['placeholder'] ?? false) {
@@ -380,59 +394,77 @@ class TagsInput extends Widget
     public function generate()
     {
         $this->prepare();
+        $classNames = trim(($this->strClass ?? null) ?: '');
+        $selectedOptions = implode('', $this->arrSelectedOptions);
+        $attributes = trim($this->getAttributes());
+        $attributes = $attributes ? ' ' . $attributes : '';
+
         $strWidget = sprintf(
             '<select name="%s" id="ctrl_%s" class="%s"%s>%s</select>%s',
             $this->strName,
             $this->strId,
-            trim(($this->strClass != '') ? ' ' . $this->strClass : ''),
-            $this->getAttributes(),
-            implode('', $this->arrSelectedOptions),
+            $classNames,
+            $attributes,
+            $selectedOptions,
             $this->wizard
         );
 
-        $getConfigByArrayOrCallbackOrFunction = function (array $arrArray, $strProperty, array $arrArgs = [])
+        /**
+         * @param array $arr
+         * @param string|mixed $property
+         * @param array $args
+         * @return mixed|null
+         */
+        $getConfigByArrayOrCallbackOrFunction = function (array $arr, $property, array $args = [])
         {
-            if (isset($arrArray[$strProperty])) {
-                return $arrArray[$strProperty];
+            if (isset($arr[$property])) {
+                return $arr[$property];
             }
 
-            if (is_array($arrArray[$strProperty . '_callback']))
+            $callback = $arr[$property . '_callback'] ?? null;
+
+            if (is_array($callback))
             {
-                $arrCallback = $arrArray[$strProperty.'_callback'];
-                $instance = Controller::importStatic($arrCallback[0]);
-                return call_user_func_array([$instance, $arrCallback[1]], $arrArgs);
+                $instance = Controller::importStatic($callback[0]);
+                return call_user_func_array([$instance, $callback[1]], $args);
             }
-            elseif (is_callable($arrArray[$strProperty . '_callback']))
+
+            if (is_callable($callback))
             {
-                return call_user_func_array($arrArray[$strProperty . '_callback'], $arrArgs);
+                return call_user_func_array($callback, $args);
             }
 
             return null;
         };
 
-        if ($this->arrConfiguration['showTagList'] ?? false) {
-            $intClassCount = $this->arrConfiguration['tagListWeightClassCount'] ?? 6;
+        if ($this->arrConfiguration['showTagList'] ?? false)
+        {
+            $classCount = $this->arrConfiguration['tagListWeightClassCount'] ?? 6;
 
-            $strTagList = '<ul class="tt-tag-list" data-class-count="' . $intClassCount . '">';
+            $strTagList = '<ul class="tt-tag-list" data-class-count="' . $classCount . '">';
 
-            if (isset($this->arrConfiguration['option_weights']) || isset($this->arrConfiguration['option_weights_callback'])) {
-                $arrTagWeights = $getConfigByArrayOrCallbackOrFunction(
+            if (isset($this->arrConfiguration['option_weights'])
+                || isset($this->arrConfiguration['option_weights_callback']))
+            {
+                $tagWeights = $getConfigByArrayOrCallbackOrFunction(
                     (array)$this->arrConfiguration, 'option_weights', [$this->objDca]
                 );
 
-                $intMaxCount = 0;
+                $maxCount = 0;
 
-                foreach ($arrTagWeights as $strTag => $intCount) {
-                    if ($intCount > $intMaxCount) {
-                        $intMaxCount = $intCount;
+                foreach ($tagWeights as $count) {
+                    if ($count > $maxCount) {
+                        $maxCount = $count;
                     }
                 }
 
-                foreach ($arrTagWeights as $strTag => $intCount) {
-                    $strTagList .= '<li><a class="' . static::getTagSizeClass($intCount, $intMaxCount, $intClassCount) .
-                        '" href="#"><span>' . $strTag . '</span> (' . $intCount . ')</a></li>';
+                foreach ($tagWeights as $strTag => $count) {
+                    $strTagList .= '<li><a class="' . static::getTagSizeClass($count, $maxCount, $classCount) .
+                        '" href="#"><span>' . $strTag . '</span> (' . $count . ')</a></li>';
                 }
-            } else {
+            }
+            else
+            {
                 foreach ($this->arrOptionsAll as $arrTag) {
                     $strTagList .= '<li><a href="#">' . $arrTag['value'] . '</a></li>';
                 }
@@ -446,16 +478,17 @@ class TagsInput extends Widget
         return $strWidget;
     }
 
-    public static function getTagSizeClass($intCount, $intMaxCount, $intClassCount)
+    public static function getTagSizeClass($intCount, $intMaxCount, $intClassCount): string
     {
         for ($i = $intClassCount - 1; $i >= 0; $i--) {
             if ($intCount >= $i * $intMaxCount / $intClassCount) {
                 return 'size' . ($i + 1);
             }
         }
+        return '';
     }
 
-    protected function getRemoteOptionsFromQuery($strQuery)
+    protected function getRemoteOptionsFromQuery($strQuery): array
     {
         $arrOptions = [];
 
@@ -464,8 +497,9 @@ class TagsInput extends Widget
         }
 
         // get query options from relation table
-        if (($arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) !== false) {
-
+        $arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey']);
+        if ($arrRelationData !== false)
+        {
             return $this->getRemoteOptionsFromRelationTable($strQuery, $arrRelationData);
         }
 
@@ -501,8 +535,7 @@ class TagsInput extends Widget
             }
 
             $arrOption = $this->generateOption($arrLocalOption['value'], $arrLocalOption['label']);
-
-            if ($arrOption === false) {
+            if ($arrOption === null) {
                 continue;
             }
 
@@ -519,52 +552,55 @@ class TagsInput extends Widget
         return $arrOptions;
     }
 
-    protected function getRemoteOptionsFromRelationTable($strQuery, array $arrRelationData)
+    protected function getRemoteOptionsFromRelationTable($strQuery, array $arrRelationData): array
     {
-        $arrOptions = [];
+        $options = [];
 
+        /** @var class-string<Model> $relModelClass */
         list($relTable, $relField, $relModelClass) = $arrRelationData;
 
         $strQueryField   = $this->arrConfiguration['remote']['queryField'];
-        $strQueryPattern =
-            $this->arrConfiguration['remote']['queryPattern'] ? str_replace('QUERY', $strQuery, $this->arrConfiguration['remote']['queryPattern']) : ('%' . $strQuery . '%');
+        $strQueryPattern = $this->arrConfiguration['remote']['queryPattern']
+            ? str_replace('QUERY', $strQuery, $this->arrConfiguration['remote']['queryPattern'])
+            : ('%' . $strQuery . '%');
         $arrFields       = $this->arrConfiguration['remote']['fields'];
         $intLimit        = $this->arrConfiguration['remote']['limit'] ?: 10;
 
         if (empty($arrFields) || !is_numeric($intLimit) || !$strQueryField) {
-            return $arrOptions;
+            return $options;
         }
 
-        /** @var \Model $objEntities */
-        $objEntities = $relModelClass::findBy(["$relTable.$strQueryField LIKE ?"], $strQueryPattern, ['limit' => $intLimit]);
+        /** @var Collection $entities */
+        $entities = $relModelClass::findBy(["$relTable.$strQueryField LIKE ?"], $strQueryPattern, ['limit' => $intLimit]);
 
-        if ($objEntities === null) {
-            return $arrOptions;
+        if ($entities === null) {
+            return $options;
         }
 
-        while ($objEntities->next()) {
-            $arrOption = $this->generateOption($objEntities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $objEntities->current());
+        while ($entities->next())
+        {
+            $option = $this->generateOption($entities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $entities->current());
 
-            if ($arrOption === false) {
+            if ($option === null) {
                 continue;
             }
 
-            $arrOptions[] = $arrOption;
+            $options[] = $option;
         }
 
-        asort($arrOptions);
+        asort($options);
 
-        return $arrOptions;
+        return $options;
     }
 
-    public function generateAjax($strAction, \DataContainer $objDca)
+    public function generateAjax($strAction, DataContainer $objDca)
     {
         // no tagsinput action --> return
         if (!$this->isValidAjaxActions($strAction)) {
             return;
         }
 
-        $strField = $objDca->field = \Input::post('name');
+        $strField = $objDca->field = Input::post('name');
 
         Controller::loadDataContainer($objDca->table);
 
@@ -577,7 +613,7 @@ class TagsInput extends Widget
             die('Bad Request');
         }
 
-        $strField             = \Input::post('name');
+        $strField             = Input::post('name');
         $objDca->activeRecord = $objActiveRecord;
         $arrData              = $GLOBALS['TL_DCA'][$objDca->table]['fields'][$strField];
 
@@ -591,8 +627,8 @@ class TagsInput extends Widget
 
         switch ($strAction) {
             case static::ACTION_FETCH_REMOTE_OPTIONS:
-                $objWidget = new tagsinput\widgets\TagsInput(\Widget::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
-                $return    = array_values($objWidget->getRemoteOptionsFromQuery(\Input::post('query')));
+                $objWidget = new TagsInput(static::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
+                $return    = array_values($objWidget->getRemoteOptionsFromQuery(Input::post('query')));
                 break;
         }
 
@@ -619,32 +655,34 @@ class TagsInput extends Widget
 
                 break;
             default:
-                // add free input values from $this->varValue
-                if ($this->arrConfiguration['freeInput'] && !empty($this->varValue)) {
-                    if (is_array($this->varValue)) {
-                        foreach ($this->varValue as $value) {
-                            if (($arrOption = $this->generateOption($value, $value)) === false) {
-                                continue;
-                            }
-
-                            $arrChoices[] = $arrOption;
-                        }
-
-                        $arrChoices = $this->addDefaultOptions($arrChoices);
-
-                        break;
-                    }
-
-                    if (($arrOption = $this->generateOption($this->varValue, $this->varValue)) !== false) {
-                        $arrChoices[] = $arrOption;
-                    }
-
+                if (!$this->arrConfiguration['freeInput'] || empty($this->varValue)) {
                     $arrChoices = $this->addDefaultOptions($arrChoices);
                     break;
                 }
 
-                $arrChoices = $this->addDefaultOptions($arrChoices);
+                // add free input values from $this->varValue
 
+                if (is_array($this->varValue))
+                {
+                    foreach ($this->varValue as $value)
+                    {
+                        $arrOption = $this->generateOption($value, $value);
+                        if ($arrOption !== null) {
+                            $arrChoices[] = $arrOption;
+                        }
+                    }
+
+                    $arrChoices = $this->addDefaultOptions($arrChoices);
+
+                    break;
+                }
+
+                $arrOption = $this->generateOption($this->varValue, $this->varValue);
+                if ($arrOption !== null) {
+                    $arrChoices[] = $arrOption;
+                }
+
+                $arrChoices = $this->addDefaultOptions($arrChoices);
                 break;
         }
 
@@ -660,22 +698,27 @@ class TagsInput extends Widget
         $i = is_array($this->varValue) ? count($this->varValue) : 0; // add new values after last varValue index
         $arrSkip = [];
 
-        foreach ($this->arrOptions as $arrDefaultOption) {
-            if (($arrOption = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label'])) === false) {
+        foreach ($this->arrOptions as $arrDefaultOption)
+        {
+            $option = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label']);
+            if ($option === null) {
                 continue;
             }
 
             // default options should be sorted by given value order if value is set
-            if (!empty($this->varValue)) {
-                if (is_array($this->varValue) && ($pos = array_search($arrDefaultOption['value'], $this->varValue)) !== false && !in_array($pos, $arrSkip)) {
-                    $arrChoices[$pos] = $arrOption;
+            if (!empty($this->varValue) && is_array($this->varValue))
+            {
+                $pos = array_search($arrDefaultOption['value'], $this->varValue);
+                if ($pos !== false && !in_array($pos, $arrSkip))
+                {
+                    $arrChoices[$pos] = $option;
                     $arrSkip[] = $pos;
                     continue;
                 }
             }
 
             // store value as key for sorting by $this->varValue or if single varValue
-            $arrChoices[$i] = $arrOption;
+            $arrChoices[$i] = $option;
             $i++;
 
         }
@@ -686,95 +729,98 @@ class TagsInput extends Widget
         return $arrChoices;
     }
 
-    protected function getActiveRemoteOptionsFromLocalOptions(array $arrValues = [])
+    protected function getActiveRemoteOptionsFromLocalOptions(array $values = []): array
     {
-        $arrOptions     = [];
-        $arrLocalValues = [];
+        $options = [];
+        $localValues = [];
 
-        foreach ($this->arrOptions as $arrLocalOption) {
-            if (!isset($arrLocalOption['value'])) {
+        foreach ($this->arrOptions as $localOption)
+        {
+            if (!isset($localOption['value'])) {
                 continue;
             }
 
-            // restore postion from arrValues position
-            if (($pos = array_search($arrLocalOption['value'], $arrValues)) === false) {
+            // restore postion from values position
+            $pos = array_search($localOption['value'], $values);
+            if ($pos === false) {
                 continue;
             }
 
-            $arrOption = $this->generateOption($arrLocalOption['value'], $arrLocalOption['label']);
-
-            if ($arrOption === false) {
+            $option = $this->generateOption($localOption['value'], $localOption['label']);
+            if ($option === null) {
                 continue;
             }
 
-            $arrLocalValues[] = $arrLocalOption['value'];
-            $arrOptions[$pos] = $arrOption;
+            $localValues[] = $localOption['value'];
+            $options[$pos] = $option;
         }
 
-        if ($this->canInputFree()) {
-            $arrFreeValues = array_diff($arrValues, $arrLocalValues);
+        if ($this->canInputFree())
+        {
+            $freeValues = array_diff($values, $localValues);
 
-            if (is_array($arrFreeValues)) {
-                foreach ($arrFreeValues as $arrFreeValue) {
-                    $arrOption = $this->generateOption($arrFreeValue, $arrFreeValue);
-
-                    // restore postion from arrValues position
-                    if (($pos = array_search($arrFreeValue, $arrValues)) === false) {
-                        continue;
-                    }
-
-                    if ($arrOption === false) {
-                        continue;
-                    }
-
-                    $arrOptions[$pos] = $arrOption;
+            foreach ($freeValues as $freeValue)
+            {
+                // restore postion from arrValues position
+                $pos = array_search($freeValue, $values);
+                if ($pos === false) {
+                    continue;
                 }
+
+                $option = $this->generateOption($freeValue, $freeValue);
+                if ($option === null) {
+                    continue;
+                }
+
+                $options[$pos] = $option;
             }
         }
 
-        ksort($arrOptions);
+        ksort($options);
 
-        return $arrOptions;
+        return $options;
     }
 
 
     protected function getActiveRemoteOptionsFromRelationTable(array $arrValues, array $arrRelationData)
     {
-        $arrOptions = [];
+        $options = [];
 
         list($relTable, $relField, $relModelClass) = $arrRelationData;
 
-        /** @var \Model $objEntities */
+        /** @var Collection $objEntities */
         $objEntities = $relModelClass::findMultipleByIds($arrValues);
 
         if ($objEntities === null) {
-            return $arrOptions;
+            return $options;
         }
 
         $arrFields = $this->arrConfiguration['remote']['fields'];
 
-        while ($objEntities->next()) {
-            $arrOption = $this->generateOption($objEntities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $objEntities->current());
+        while ($objEntities->next())
+        {
+            $arrOption = $this->generateOption(
+                $objEntities->id,
+                null,
+                $this->arrConfiguration['remote']['format'],
+                $arrFields,
+                $objEntities->current()
+            );
 
-            if ($arrOption === false) {
+            if ($arrOption === null) {
                 continue;
             }
 
-            $arrOptions[] = $arrOption;
+            $options[] = $arrOption;
         }
 
-        return $arrOptions;
+        return $options;
     }
 
 
-    protected function isValidAjaxActions($strAction)
+    protected function isValidAjaxActions($strAction): bool
     {
-        return in_array(
-            $strAction,
-            [
-                static::ACTION_FETCH_REMOTE_OPTIONS,
-            ]
-        );
+        return $strAction === static::ACTION_FETCH_REMOTE_OPTIONS;
     }
 
     /**
@@ -830,18 +876,24 @@ class TagsInput extends Widget
      *
      * @return array The option as associative value / label array
      */
-    protected function generateOption($varValue, $strLabel = null, $strFormat = null, array $arrFields = [], \Model $objItem = null)
+    protected function generateOption(
+        $varValue,
+        $strLabel = null,
+        $strFormat = null,
+        array $arrFields = [],
+        Model $objItem = null
+    ): ?array
     {
         $arrFieldValues = [];
 
-        if ($strFormat && !empty($arrFields) && $objItem !== null) {
+        if ($strFormat && !empty($arrFields) && $objItem !== null)
+        {
             foreach ($arrFields as $strField) {
                 $arrFieldValues[] = $objItem->{$strField};
             }
 
             $strLabel = html_entity_decode(vsprintf($strFormat, $arrFieldValues));
         }
-
 
         $arrOption = [
             'value' => $varValue,
@@ -863,42 +915,41 @@ class TagsInput extends Widget
         }
 
         // check option after callback
-        if (!is_array($arrOption) && !isset($arrOption['value'])) {
-            return false;
+        if (!is_array($arrOption) || !isset($arrOption['value']))
+        {
+            return null;
         }
 
         return $arrOption;
     }
 
-    protected function canInputFree()
+    protected function canInputFree(): bool
     {
-        $blnCheck = false;
+        $hasFreeInput = false;
 
         if ($this->arrConfiguration['freeInput']) {
-            $blnCheck = true;
+            $hasFreeInput = true;
         }
 
-        switch ($this->mode) {
-            case static::MODE_REMOTE:
-                // disable free input if no relation data isset
-                if (($this->getRelationData($this->arrConfiguration['remote']['foreignKey'])) === false) {
-                    $blnCheck = false;
-                }
+        if ($this->mode === static::MODE_REMOTE) {
+            // disable free input if no relation data isset
+            if ($this->getRelationData($this->arrConfiguration['remote']['foreignKey']) === false) {
+                $hasFreeInput = false;
+            }
 
-                // disable if no save_tags configuration isset
-                if (($arrSaveConfig = ($this->arrConfiguration['save_tags'] ?? null)) === null && !isset($arrSaveConfig['table'])) {
-                    $blnCheck = false;
-                }
+            // disable if no save_tags configuration isset
+            $arrSaveConfig = $this->arrConfiguration['save_tags'] ?? null;
+            if ($arrSaveConfig === null && !isset($arrSaveConfig['table'])) {
+                $hasFreeInput = false;
+            }
 
-                // support free input for local remote options
-                if (!$blnCheck && is_array($this->arrOptions)) {
-                    $blnCheck = true;
-                }
-
-                break;
+            // support free input for local remote options
+            if (!$hasFreeInput && is_array($this->arrOptions)) {
+                $hasFreeInput = true;
+            }
         }
 
-        return $blnCheck;
+        return $hasFreeInput;
     }
 }
 

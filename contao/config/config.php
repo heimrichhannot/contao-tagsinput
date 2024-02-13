@@ -10,6 +10,8 @@
  */
 
 use Contao\System;
+use HeimrichHannot\TagsInput\Widget\TagsInput;
+use HeimrichHannot\TagsInput\Widget\FormTagsInput;
 
 /**
  * Constants
@@ -19,12 +21,12 @@ define('TAGSINPUT_NEW_TAG_PREFIX', '#!nt&_');
 /**
  * Back end form fields
  */
-$GLOBALS['BE_FFL']['tagsinput'] = 'TagsInput';
+$GLOBALS['BE_FFL']['tagsinput'] = TagsInput::class;
 
 /**
  * Front end form fields
  */
-$GLOBALS['TL_FFL']['tagsinput'] = 'FormTagsInput';
+$GLOBALS['TL_FFL']['tagsinput'] = FormTagsInput::class;
 
 /**
  * Javascript

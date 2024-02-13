@@ -11,8 +11,10 @@
 
 namespace HeimrichHannot\TagsInput\Widget;
 
+use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Input;
+use Exception;
 
 class FormTagsInput extends TagsInput
 {
@@ -62,7 +64,12 @@ class FormTagsInput extends TagsInput
     {
         parent::__construct($arrAttributes);
 
-        if (Environment::get('isAjaxRequest')) {
+        if (Environment::get('isAjaxRequest'))
+        {
+            if (!$this->objDca instanceof DataContainer) {
+                throw new Exception('DataContainer not set in FormTagsInput');
+            }
+
             $this->generateAjax(Input::post('action'), $this->objDca);
         }
     }
@@ -92,13 +99,12 @@ class FormTagsInput extends TagsInput
         }
     }
 
-
     /**
      * Generate the widget and return it as string
      *
      * @return string
      */
-    public function generate()
+    public function generate(): string
     {
         $this->prepare();
 
