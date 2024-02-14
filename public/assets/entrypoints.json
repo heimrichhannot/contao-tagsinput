@@ -1,19 +1,23 @@
 {
   "entrypoints": {
+    "contao-tagsinput": {
+      "js": [
+        "/bundles/heimrichhannottagsinput/assets/contao-tagsinput.js"
+      ]
+    },
     "contao-tagsinput-be": {
-      "css": [
-        "/bundles/heimrichhannottagsinput/assets/contao-tagsinput-be.css"
-      ],
       "js": [
         "/bundles/heimrichhannottagsinput/assets/contao-tagsinput-be.js"
       ]
     },
-    "contao-tagsinput-be-contao4": {
+    "contao-tagsinput-be-theme": {
       "css": [
-        "/bundles/heimrichhannottagsinput/assets/contao-tagsinput-be-contao4.css"
-      ],
-      "js": [
-        "/bundles/heimrichhannottagsinput/assets/contao-tagsinput-be-contao4.js"
+        "/bundles/heimrichhannottagsinput/assets/contao-tagsinput-be-theme.css"
+      ]
+    },
+    "contao-tagsinput-be-contao4-theme": {
+      "css": [
+        "/bundles/heimrichhannottagsinput/assets/contao-tagsinput-be-contao4-theme.css"
       ]
     }
   }

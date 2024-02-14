@@ -41,21 +41,21 @@ $GLOBALS['TL_FFL']['tagsinput'] = FormTagsInput::class;
  */
 // $GLOBALS['TL_CSS']['tagsinput'] = 'system/modules/tagsinput/assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
 
-$utils = System::getContainer()->get('huh.utils.container');
-
-if ($utils->isBackend())
-{
-    $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'bundles/heimrichhannottagsinput/assets/contao-tagsinput-be.js|static';
-    $GLOBALS['TL_CSS']['tagsinput-be'] = 'bundles/heimrichhannottagsinput/assets/bootstrap-tagsinput-be.css';
-
-    // $GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
-    // $GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
-
-    if (version_compare(VERSION, '4.0', '>=') && version_compare(VERSION, '5.0', '<')) {
-        $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'bundles/heimrichhannottagsinput/assets/contao-tagsinput-be-contao4.js|static';
-        $GLOBALS['TL_CSS']['tagsinput-be'] = 'bundles/heimrichhannottagsinput/assets/bootstrap-tagsinput-be-contao4.css';
-    }
-}
+//$utils = System::getContainer()->get('huh.utils.container');
+//
+//if ($utils->isBackend())
+//{
+//    $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'bundles/heimrichhannotcontaotagsinput/assets/contao-tagsinput-be.js|static';
+//    $GLOBALS['TL_CSS']['tagsinput-be'] = 'bundles/heimrichhannotcontaotagsinput/assets/contao-tagsinput-be.css';
+//
+//    // $GLOBALS['TL_CSS']['tagsinput-be'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-be.css';
+//    // $GLOBALS['TL_CSS']['typeahead-be'] = 'system/modules/tagsinput/assets/css/typeahead-be.css';
+//
+//    if (version_compare(VERSION, '4.0', '>=') && version_compare(VERSION, '5.0', '<')) {
+//        $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = 'bundles/heimrichhannotcontaotagsinput/assets/contao-tagsinput-be-contao4.js|static';
+//        $GLOBALS['TL_CSS']['tagsinput-be'] = 'bundles/heimrichhannotcontaotagsinput/assets/contao-tagsinput-be-contao4.css';
+//    }
+//}
 
 // if ($utils->isFrontend()) {
 //     $GLOBALS['TL_CSS']['tagsinput-fe'] = 'system/modules/tagsinput/assets/css/bootstrap-tagsinput-fe.css|static';
@@ -79,4 +79,4 @@ if ($utils->isBackend())
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['executePostActions']['tagsInput'] = ['TagsInput', 'generateAjax'];
+$GLOBALS['TL_HOOKS']['executePostActions']['tagsInput'] = [TagsInput::class, 'generateAjax'];

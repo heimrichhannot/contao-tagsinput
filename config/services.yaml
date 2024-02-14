@@ -1,5 +1,8 @@
 services:
   HeimrichHannot\TagsInput\:
-    resource: '../src/{Asset,Widget}/*'
+    resource: '../src/{Asset,EventListener,Widget}/*'
     autowire: true
     autoconfigure: true
+
+  HeimrichHannot\TagsInput\Widget\TagsInput:
+    public: true
