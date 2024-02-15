@@ -59,6 +59,7 @@ class FormTagsInput extends TagsInput
      * Initialize the object
      *
      * @param array $arrAttributes An optional attributes array
+     * @throws Exception
      */
     public function __construct($arrAttributes = null)
     {

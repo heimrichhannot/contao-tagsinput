@@ -12,17 +12,23 @@
 namespace HeimrichHannot\TagsInput\Widget;
 
 use Contao\Controller;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\Model;
 use Contao\Model\Collection;
-use Contao\RequestToken;
 use Contao\StringUtil;
 use Contao\Widget;
+use const VERSION;
 
 class TagsInput extends Widget
 {
+    const MODE_LOCAL  = 'local';
+    const MODE_REMOTE = 'remote';
+
+    const ACTION_FETCH_REMOTE_OPTIONS = 'fetchRemoteOptions';
+
     /**
      * Submit user input
      *
@@ -47,18 +53,13 @@ class TagsInput extends Widget
     /**
      * @var array
      */
-    protected $arrOptionsAll = [];
+    protected array $arrOptionsAll = [];
 
-    protected $arrTags = [];
+    protected array $arrTags = [];
 
-    protected $arrHighlights = [];
+    protected array $arrHighlights = [];
 
-    protected $arrSelectedOptions = [];
-
-    const MODE_LOCAL  = 'local';
-    const MODE_REMOTE = 'remote';
-
-    const ACTION_FETCH_REMOTE_OPTIONS = 'fetchRemoteOptions';
+    protected array $arrSelectedOptions = [];
 
     /**
      * Add specific attributes
@@ -316,7 +317,7 @@ class TagsInput extends Widget
         $this->arrOptionsAll = $this->arrOptions;
 
         // add remote options or freeInput options
-        $this->arrOptions = $this->getOptions(deserialize($this->varValue, true));
+        $this->arrOptions = $this->getOptions(StringUtil::deserialize($this->varValue, true));
 
         // Add an empty option (XHTML) if there are none
         if (empty($this->arrOptions)) {
@@ -343,7 +344,7 @@ class TagsInput extends Widget
                 if ($this->isSelected($arrOption)) {
                     $this->arrSelectedOptions[] = sprintf(
                         '<option value="%s"%s%s>%s</option>',
-                        is_numeric($arrOption['value']) ? $arrOption['value'] : specialchars($arrOption['label']),
+                        is_numeric($arrOption['value']) ? $arrOption['value'] : StringUtil::specialchars($arrOption['label']),
                         (!empty($arrOption['class']) ? 'class="' . $arrOption['class'] . '"' : ''),
                         (!empty($arrOption['target']) ? 'data-target="' . $arrOption['class'] . '"' : ''),
                         $arrOption['label']
@@ -377,12 +378,14 @@ class TagsInput extends Widget
                         [
                             'action' => static::ACTION_FETCH_REMOTE_OPTIONS,
                             'name' => $this->strId,
-                            'REQUEST_TOKEN' => RequestToken::get(),
+                            'REQUEST_TOKEN' => static::getContainer()->get(ContaoCsrfTokenManager::class)->getDefaultTokenValue()
                         ]
                     )
                 )
             );
         }
+
+        dump(static::getContainer()->get(ContaoCsrfTokenManager::class)->getDefaultTokenValue());
 
         if ($this->arrConfiguration['placeholder'] ?? false) {
             $this->addAttribute('data-placeholder', $this->arrConfiguration['placeholder']);
@@ -405,7 +408,7 @@ class TagsInput extends Widget
         // CSS: ['tagsinput-be'] = 'assets/css/bootstrap-tagsinput-be.css';
         // CSS: ['typeahead-be'] = 'assets/css/typeahead-be.css';
 
-        if (version_compare(\VERSION, '5.0', '<')) {
+        if (version_compare(VERSION, '5.0', '<')) {
             $GLOBALS['TL_CSS']['tagsinput-be-contao4-theme'] = "$bundle/assets/contao-tagsinput-be-contao4-theme.css";
         }
     }
@@ -634,7 +637,8 @@ class TagsInput extends Widget
         $objActiveRecord = class_exists($modelClass) ? $modelClass::findByPk($objDca->id) : null;
 
         if ($objActiveRecord === null) {
-            $this->log('No active record for "' . $strField . '" found (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+            $logger = static::getContainer()->get('monolog.logger.contao');
+            $logger->log('No active record for "' . $strField . '" found (possible SQL injection attempt)', __METHOD__, TL_ERROR);
             header('HTTP/1.1 400 Bad Request');
             die('Bad Request');
         }
@@ -644,18 +648,17 @@ class TagsInput extends Widget
         $arrData              = $GLOBALS['TL_DCA'][$objDca->table]['fields'][$strField];
 
         if (!is_array($arrData)) {
-            $this->log('No valid field configuration (dca) found for "' . $objDca->table . '.' . $strField . '" (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+            $logger = static::getContainer()->get('monolog.logger.contao');
+            $logger->log('No valid field configuration (dca) found for "' . $objDca->table . '.' . $strField . '" (possible SQL injection attempt)', __METHOD__, TL_ERROR);
             header('HTTP/1.1 400 Bad Request');
             die('Bad Request');
         }
 
         $return = '';
 
-        switch ($strAction) {
-            case static::ACTION_FETCH_REMOTE_OPTIONS:
-                $objWidget = new TagsInput(static::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
-                $return    = array_values($objWidget->getRemoteOptionsFromQuery(Input::post('query')));
-                break;
+        if ($strAction === static::ACTION_FETCH_REMOTE_OPTIONS) {
+            $objWidget = new TagsInput(static::getAttributesFromDca($arrData, $strField, $objActiveRecord->{$strField}, $strField, $this->strTable, $objDca));
+            $return = array_values($objWidget->getRemoteOptionsFromQuery(Input::post('query')));
         }
 
         die(json_encode($return));
@@ -895,10 +898,10 @@ class TagsInput extends Widget
      * Generate the option array by given configuration
      *
      * @param mixed $varValue the 'value'
-     * @param        string
-     * @param string $strFormat optional: Format string, for vsprintf()
+     * @param null $strLabel optional: The 'label'
+     * @param null $strFormat optional: Format string, for vsprintf()
      * @param array $arrFields optional: The field names from the model. Taken values from $objItem and put them into $strFormat vsprintf()
-     * @param \Model $objItem optional: The model data
+     * @param Model|null $objItem optional: The model data
      *
      * @return array The option as associative value / label array
      */
