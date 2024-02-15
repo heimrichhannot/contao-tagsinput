@@ -1,2 +1,2 @@
-import "./contao-tagsinput"
-import "./jquery.tagsinput";
+require("./contao-tagsinput");
+require("./jquery.tagsinput");

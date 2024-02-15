@@ -385,6 +385,26 @@ class TagsInput extends Widget
         }
     }
 
+    public static function loadAssets()
+    {
+        $bundle = 'bundles/heimrichhannotcontaotagsinput';
+
+        $GLOBALS['TL_JAVASCRIPT']['tagsinput-be'] = "$bundle/assets/contao-tagsinput-be.js";
+        $GLOBALS['TL_CSS']['tagsinput-be-theme'] = "$bundle/assets/contao-tagsinput-be-theme.css";
+
+        // JS: ['tagsinput']    = 'assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js|static';
+        // JS: ['sortable']     = 'assets/vendor/Sortable/Sortable.min.js|static';
+        // JS: ['typeahead']    = 'assets/vendor/corejs-typeahead/dist/typeahead.bundle.min.js|static';
+        // JS: ['tagsinput-be'] = 'assets/js/jquery.tagsinput.min.js|static';
+
+        // CSS: ['tagsinput'] = 'assets/vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css';
+        // CSS: ['tagsinput-be'] = 'assets/css/bootstrap-tagsinput-be.css';
+        // CSS: ['typeahead-be'] = 'assets/css/typeahead-be.css';
+
+        if (version_compare(\VERSION, '5.0', '<')) {
+            $GLOBALS['TL_CSS']['tagsinput-be-contao4-theme'] = "$bundle/assets/contao-tagsinput-be-contao4-theme.css";
+        }
+    }
 
     /**
      * Generate the widget and return it as string
@@ -393,6 +413,8 @@ class TagsInput extends Widget
      */
     public function generate()
     {
+        static::loadAssets();
+
         $this->prepare();
         $classNames = trim(($this->strClass ?? null) ?: '');
         $selectedOptions = implode('', $this->arrSelectedOptions);
@@ -441,7 +463,7 @@ class TagsInput extends Widget
         {
             $classCount = $this->arrConfiguration['tagListWeightClassCount'] ?? 6;
 
-            $strTagList = '<ul class="tt-tag-list" data-class-count="' . $classCount . '">';
+            $strTagList = "<ul class=\"tt-tag-list\" data-class-count=\"$classCount\">";
 
             if (isset($this->arrConfiguration['option_weights'])
                 || isset($this->arrConfiguration['option_weights_callback']))

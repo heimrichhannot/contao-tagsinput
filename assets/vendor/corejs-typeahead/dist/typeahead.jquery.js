@@ -5,7 +5,7 @@
  */
 
 (function(root, factory) {
-    if (typeof define === "function" && define.amd) {
+    /*if (typeof define === "function" && define.amd) {
         define([ "jquery" ], function(a0) {
             return factory(a0);
         });
@@ -13,7 +13,9 @@
         module.exports = factory(require("jquery"));
     } else {
         factory(root["jQuery"]);
-    }
+    }*/
+    window.jQuery = window.jQuery || require("jquery");
+    factory(window.jQuery);
 })(this, function($) {
     var _ = function() {
         "use strict";

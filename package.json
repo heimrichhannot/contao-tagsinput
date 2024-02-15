@@ -4,7 +4,8 @@
     "author": "Heimrich & Hannot GmbH <digitales@heimrich-hannot.de>",
     "license": "proprietary",
     "scripts": {
-        "build": "webpack"
+        "build": "webpack",
+        "dev": "webpack --mode=development --watch"
     },
     "dependencies": {
         "custom-event-polyfill": "^1.0",
