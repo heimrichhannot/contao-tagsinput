@@ -1261,7 +1261,7 @@
 
 		var evt = document.createEvent('Event'),
 			options = sortable.options,
-			onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+			onName = 'on' + name.charAt(0).toUpperCase() + name.substring(1);
 
 		evt.initEvent(name, true, true);
 
@@ -1439,7 +1439,7 @@
 		}
 	}
 
-	// Fixed #973: 
+	// Fixed #973:
 	_on(document, 'touchmove', function (evt) {
 		if (Sortable.active) {
 			evt.preventDefault();
