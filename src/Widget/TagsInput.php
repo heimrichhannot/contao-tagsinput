@@ -129,6 +129,10 @@ class TagsInput extends Widget
             $varInput = [$varInput];
         }
 
+        $varInput = array_filter($varInput, function ($value) {
+            return (bool)$value;
+        });
+
         if (!empty($varInput)) {
             // remove duplicates
             $varInput = array_unique($varInput);
