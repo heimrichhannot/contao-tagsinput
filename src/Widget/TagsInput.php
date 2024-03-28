@@ -20,7 +20,6 @@ use Contao\Model;
 use Contao\Model\Collection;
 use Contao\StringUtil;
 use Contao\Widget;
-use const VERSION;
 
 class TagsInput extends Widget
 {
@@ -408,7 +407,7 @@ class TagsInput extends Widget
         // CSS: ['tagsinput-be'] = 'assets/css/bootstrap-tagsinput-be.css';
         // CSS: ['typeahead-be'] = 'assets/css/typeahead-be.css';
 
-        if (version_compare(VERSION, '5.0', '<')) {
+        if (defined(VERSION) && version_compare(VERSION, '5.0', '<')) {
             $GLOBALS['TL_CSS']['tagsinput-be-contao4-theme'] = "$bundle/assets/contao-tagsinput-be-contao4-theme.css";
         }
     }
@@ -638,7 +637,7 @@ class TagsInput extends Widget
 
         if ($objActiveRecord === null) {
             $logger = static::getContainer()->get('monolog.logger.contao');
-            $logger->log('No active record for "' . $strField . '" found (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+            $logger->log('No active record for "' . $strField . '" found (possible SQL injection attempt)', __METHOD__, 'ERROR');
             header('HTTP/1.1 400 Bad Request');
             die('Bad Request');
         }
@@ -649,7 +648,7 @@ class TagsInput extends Widget
 
         if (!is_array($arrData)) {
             $logger = static::getContainer()->get('monolog.logger.contao');
-            $logger->log('No valid field configuration (dca) found for "' . $objDca->table . '.' . $strField . '" (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+            $logger->log('No valid field configuration (dca) found for "' . $objDca->table . '.' . $strField . '" (possible SQL injection attempt)', __METHOD__, 'ERROR');
             header('HTTP/1.1 400 Bad Request');
             die('Bad Request');
         }
