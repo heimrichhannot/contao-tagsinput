@@ -407,7 +407,7 @@ class TagsInput extends Widget
         // CSS: ['tagsinput-be'] = 'assets/css/bootstrap-tagsinput-be.css';
         // CSS: ['typeahead-be'] = 'assets/css/typeahead-be.css';
 
-        if (defined(VERSION) && version_compare(VERSION, '5.0', '<')) {
+        if (defined('VERSION') && version_compare(\VERSION, '5.0', '<')) {
             $GLOBALS['TL_CSS']['tagsinput-be-contao4-theme'] = "$bundle/assets/contao-tagsinput-be-contao4-theme.css";
         }
     }
