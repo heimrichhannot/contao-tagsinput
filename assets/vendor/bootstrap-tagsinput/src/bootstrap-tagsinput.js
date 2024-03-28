@@ -466,7 +466,7 @@
          if (self.options.freeInput && (keyCombinationInList(event, self.options.confirmKeys) || maxLengthReached)) {
             // Only attempt to add a tag if there is data in the field
             if (text.length !== 0) {
-               self.add(maxLengthReached ? text.substr(0, self.options.maxChars) : text);
+               self.add(maxLengthReached ? text.substring(0, self.options.maxChars) : text);
                $input.val('');
             }
 

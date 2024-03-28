@@ -5,7 +5,7 @@
  */
 
 (function(root, factory) {
-    if (typeof define === "function" && define.amd) {
+    /*if (typeof define === "function" && define.amd) {
         define([ "jquery" ], function(a0) {
             return factory(a0);
         });
@@ -13,7 +13,9 @@
         module.exports = factory(require("jquery"));
     } else {
         factory(root["jQuery"]);
-    }
+    }*/
+    window.jQuery = window.jQuery || require("jquery");
+    factory(window.jQuery);
 })(this, function($) {
     var _ = function() {
         "use strict";
@@ -150,8 +152,8 @@
             },
             guid: function() {
                 function _p8(s) {
-                    var p = (Math.random().toString(16) + "000000000").substr(2, 8);
-                    return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+                    var p = (Math.random().toString(16) + "000000000").substring(2, 10);
+                    return s ? "-" + p.substring(0, 4) + "-" + p.substring(4, 8) : p;
                 }
                 return "tt-" + _p8() + _p8(true) + _p8(true) + _p8();
             },
