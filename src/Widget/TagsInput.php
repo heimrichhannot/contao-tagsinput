@@ -373,18 +373,14 @@ class TagsInput extends Widget
             $this->addAttribute(
                 'data-post-data',
                 htmlspecialchars(
-                    json_encode(
-                        [
-                            'action' => static::ACTION_FETCH_REMOTE_OPTIONS,
-                            'name' => $this->strId,
-                            'REQUEST_TOKEN' => static::getContainer()->get(ContaoCsrfTokenManager::class)->getDefaultTokenValue()
-                        ]
-                    )
+                    json_encode([
+                        'action' => static::ACTION_FETCH_REMOTE_OPTIONS,
+                        'name' => $this->strId,
+                        'REQUEST_TOKEN' => static::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()
+                    ])
                 )
             );
         }
-
-        dump(static::getContainer()->get(ContaoCsrfTokenManager::class)->getDefaultTokenValue());
 
         if ($this->arrConfiguration['placeholder'] ?? false) {
             $this->addAttribute('data-placeholder', $this->arrConfiguration['placeholder']);
