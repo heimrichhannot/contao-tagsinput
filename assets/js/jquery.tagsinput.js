@@ -1,4 +1,11 @@
+const jQuery = require('jquery');
+
 (function($) {
+
+    if ($ === undefined) {
+        console.error("jQuery is required for tagsinput.js to work");
+        return;
+    }
 
     var TagsInputContaoBackend = {
         config: {

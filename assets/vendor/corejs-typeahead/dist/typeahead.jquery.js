@@ -14,8 +14,7 @@
     } else {
         factory(root["jQuery"]);
     }*/
-    window.jQuery = window.jQuery || require("jquery");
-    factory(window.jQuery);
+    factory(require('jquery'));
 })(this, function($) {
     var _ = function() {
         "use strict";

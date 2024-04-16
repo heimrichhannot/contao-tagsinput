@@ -3,6 +3,8 @@
  * 
  */
 
+const jQuery = require('jquery');
+
 (function($) {
   'use strict';
 
@@ -710,4 +712,4 @@
   $(function() {
     $('input[data-role=tagsinput], select[multiple][data-role=tagsinput]').tagsinput();
   });
-})(window.jQuery);
+})(jQuery);

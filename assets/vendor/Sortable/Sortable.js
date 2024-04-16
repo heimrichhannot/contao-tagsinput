@@ -4,6 +4,8 @@
  * @license MIT
  */
 
+const jQuery = require('jquery');
+
 (function sortableModule(factory) {
 	"use strict";
 
@@ -65,7 +67,7 @@
 		document = win.document,
 		parseInt = win.parseInt,
 
-		$ = win.jQuery || win.Zepto,
+		$ = jQuery || win.jQuery || win.Zepto,
 		Polymer = win.Polymer,
 
 		captureMode = false,
