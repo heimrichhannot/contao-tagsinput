@@ -1,40 +1,40 @@
 {
-  "name": "heimrichhannot/contao-tagsinput",
-  "description": "Contao port of Bootstrap Tags Input that provides an front and back end field to add custom values like tags to an field or database table.",
-  "keywords": [
-    "contao",
-    "tagsinput",
-    "tags",
-    "input",
-    "widget"
-  ],
-  "type": "contao-bundle",
-  "homepage": "https://github.com/heimrichhannot/contao-tagsinput",
-  "license": "LGPL-3.0-or-later",
-  "authors": [
-    {
-      "name": "Heimrich & Hannot",
-      "email": "digitales@heimrich-hannot.de",
-      "homepage": "http://www.heimrich-hannot.de",
-      "role": "Developer"
+    "name": "heimrichhannot/contao-tagsinput",
+    "description": "Contao port of Bootstrap Tags Input that provides an front and back end field to add custom values like tags to an field or database table.",
+    "keywords": [
+        "contao",
+        "tagsinput",
+        "tags",
+        "input",
+        "widget"
+    ],
+    "type": "contao-bundle",
+    "homepage": "https://github.com/heimrichhannot/contao-tagsinput",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Heimrich & Hannot",
+            "email": "digitales@heimrich-hannot.de",
+            "homepage": "https://www.heimrich-hannot.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/heimrichhannot/contao-tagsinput/issues"
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "~4.13 || ^5.0",
+        "heimrichhannot/contao-encore-contracts": "^1.0",
+        "heimrichhannot/contao-utils-bundle": "^2.233 || ^3.0@beta",
+        "symfony/http-kernel": "^5.4 || ^6.0 || ^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "HeimrichHannot\\TagsInput\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "HeimrichHannot\\TagsInput\\ContaoManager\\Plugin"
     }
-  ],
-  "support": {
-    "issues": "https://github.com/heimrichhannot/contao-tagsinput/issues"
-  },
-  "require": {
-    "php": "^7.4 || ^8.0",
-    "contao/core-bundle": "~4.13 || ^5.0",
-    "contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
-    "heimrichhannot/contao-encore-contracts": "^1.0",
-    "heimrichhannot/contao-utils-bundle": "^2.233 || ^3.0@beta"
-  },
-  "autoload": {
-    "psr-4": {
-      "HeimrichHannot\\TagsInput\\": "src/"
-    }
-  },
-  "extra": {
-    "contao-manager-plugin": "HeimrichHannot\\TagsInput\\ContaoManager\\Plugin"
-  }
 }
