@@ -905,7 +905,7 @@ class TagsInput extends Widget
         $strLabel = null,
         $strFormat = null,
         array $arrFields = [],
-        Model $objItem = null
+        ?Model $objItem = null
     ): ?array
     {
         $arrFieldValues = [];
