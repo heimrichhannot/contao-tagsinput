@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.1] - 2024-11-03
+- Fixed: implicit nullable warning
+- Fixed: dependencies
+
+## [3.0.0] - 2024-04-16
+- This is now no longer a module, but a Contao bundle 🎉
+- Fixed: Issues with jQuery. We now bundle the required legacy jQuery ourselves without relaying to `window.$`
+
 ## [2.4.2] - 2023-04-27
 - Fixed: warning
 

@@ -12,7 +12,6 @@
 namespace HeimrichHannot\TagsInput\Widget;
 
 use Contao\Controller;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
@@ -905,7 +904,7 @@ class TagsInput extends Widget
         $strLabel = null,
         $strFormat = null,
         array $arrFields = [],
-        Model $objItem = null
+        ?Model $objItem = null
     ): ?array
     {
         $arrFieldValues = [];
