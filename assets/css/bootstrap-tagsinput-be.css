@@ -1,6 +1,7 @@
 .bootstrap-tagsinput {
     width: 100%;
-    border: 1px solid #aaa;
+    border: 1px solid var(--form-border, #aaa);
+    background-color: var(--form-bg, #fff);
     border-radius: 3px;
     padding: 2px 3px 0;
     line-height: 20px;
