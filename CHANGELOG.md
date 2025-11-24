@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [3.0.1] - 2024-11-03
+## [3.0.2] - 2025-11-24
+- Fixed: visual issues on contao 5's dark theme
+- Updated: npm dependencies
+- Tracked: package-lock.json
+
+## [3.0.1] - 2025-11-03
 - Fixed: implicit nullable warning
 - Fixed: dependencies
 
