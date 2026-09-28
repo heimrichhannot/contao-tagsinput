@@ -1,8 +1,7 @@
 <?php
 
-/*
+/**
  * Copyright (c) 2022 Heimrich & Hannot GmbH
- *
  * @license LGPL-3.0-or-later
  */
 
@@ -14,17 +13,11 @@ use HeimrichHannot\TagsInput\HeimrichHannotContaoTagsInput;
 
 class EncoreExtension implements EncoreExtensionInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function getBundle(): string
     {
         return HeimrichHannotContaoTagsInput::class;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getEntries(): array
     {
         return [
@@ -36,7 +29,7 @@ class EncoreExtension implements EncoreExtensionInterface
                 ->setRequiresCss(true)
                 ->addCssEntryToRemoveFromGlobals('tagsinput')
                 ->addCssEntryToRemoveFromGlobals('tagsinput-fe')
-                ->addCssEntryToRemoveFromGlobals('typeahead-fe')
+                ->addCssEntryToRemoveFromGlobals('typeahead-fe'),
         ];
     }
 }

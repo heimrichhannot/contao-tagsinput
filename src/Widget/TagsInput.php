@@ -1,11 +1,10 @@
 <?php
+
 /**
  * Contao Open Source CMS
  *
  * Copyright (c) 2023 Heimrich & Hannot GmbH
  *
- * @package tagsinput
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
@@ -20,19 +19,33 @@ use Contao\Model\Collection;
 use Contao\StringUtil;
 use Contao\Widget;
 
+/**
+ * @property bool|null $multiple
+ * @property int|null $maxTags
+ * @property int|null $maxChars
+ * @property bool|null $trimValue
+ * @property bool|null $allowDuplicates
+ * @property int|null $limit
+ * @property bool|null $submitOnChange
+ * @property bool|null $highlight
+ * @property array|null $highlightOptions
+ * @property array|null $highlightOptionsCallback
+ * @property string|null $mode
+ */
 class TagsInput extends Widget
 {
     public const TYPE = 'tagsinput';
 
-    const MODE_LOCAL  = 'local';
-    const MODE_REMOTE = 'remote';
+    public const MODE_LOCAL = 'local';
 
-    const ACTION_FETCH_REMOTE_OPTIONS = 'fetchRemoteOptions';
+    public const MODE_REMOTE = 'remote';
+
+    public const ACTION_FETCH_REMOTE_OPTIONS = 'fetchRemoteOptions';
 
     /**
      * Submit user input
      *
-     * @var boolean
+     * @var bool
      */
     protected $blnSubmitInput = true;
 
@@ -50,9 +63,6 @@ class TagsInput extends Widget
      */
     protected $strClass = 'tl_tagsinput';
 
-    /**
-     * @var array
-     */
     protected array $arrOptionsAll = [];
 
     protected array $arrTags = [];
@@ -64,8 +74,8 @@ class TagsInput extends Widget
     /**
      * Add specific attributes
      *
-     * @param string
-     * @param mixed
+     * @param string $strKey
+     * @param mixed $varValue
      */
     public function __set($strKey, $varValue)
     {
@@ -130,7 +140,7 @@ class TagsInput extends Widget
             $varInput = [$varInput];
         }
 
-        $varInput = array_filter($varInput, fn($value) => (bool)$value);
+        $varInput = array_filter($varInput, fn ($value) => (bool) $value);
 
         if (!empty($varInput)) {
             // remove duplicates
@@ -158,7 +168,7 @@ class TagsInput extends Widget
      */
     protected function setValuesByOptions($varValue)
     {
-        $values    = [];
+        $values = [];
         $freeInput = $this->canInputFree();
 
         if (!is_array($varValue)) {
@@ -168,21 +178,17 @@ class TagsInput extends Widget
         // add remote options
         $this->arrOptions = $this->getOptions($varValue);
 
-        foreach ($varValue as $key => $tag)
-        {
+        foreach ($varValue as $key => $tag) {
             $found = false;
 
             // convert html entities back, otherwise compare for html entities will fail and tag never added
             $tag = Input::decodeEntities($tag);
 
-            foreach ($this->arrOptions as $v)
-            {
+            foreach ($this->arrOptions as $v) {
                 // set value for existing tags
-                if (array_key_exists('value', $v))
-                {
+                if (array_key_exists('value', $v)) {
                     // check options against numeric key or string value
-                    if ($tag == $v['value'] || $tag == $v['label'])
-                    {
+                    if ($tag == $v['value'] || $tag == $v['label']) {
                         if ($this->multiple) {
                             $values[$key] = $v['value'];
                         } else {
@@ -197,8 +203,7 @@ class TagsInput extends Widget
 
             $intId = $this->addNewTag($tag);
 
-            if (!$found && ($intId !== null) || $freeInput)
-            {
+            if (!$found && ($intId !== null) || $freeInput) {
                 $val = ($freeInput && !$intId) ? $tag : $intId;
 
                 if ($this->multiple) {
@@ -208,7 +213,10 @@ class TagsInput extends Widget
                 }
 
                 // add new value to options
-                $this->arrOptions[] = ['value' => $val, 'label' => $tag];
+                $this->arrOptions[] = [
+                    'value' => $val,
+                    'label' => $tag,
+                ];
             }
         }
 
@@ -216,7 +224,6 @@ class TagsInput extends Widget
     }
 
     /**
-     * Add a new tag
      */
     protected function addNewTag(string $tag): ?int
     {
@@ -232,21 +239,19 @@ class TagsInput extends Widget
         $table = $arrSaveConfig['table'];
         $modelClass = Model::getClassFromTable($arrSaveConfig['table']);
 
-        if (!class_exists($modelClass))
-        {
+        if (!class_exists($modelClass)) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidTagsModel'], $table));
             return null;
         }
 
         $strTagField = $arrSaveConfig['tagField'];
 
-        if (!Database::getInstance()->fieldExists($strTagField, $arrSaveConfig['table']))
-        {
+        if (!Database::getInstance()->fieldExists($strTagField, $arrSaveConfig['table'])) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidTagsField'], $strTagField, $table));
             return null;
         }
 
-        $objModel         = new $modelClass();
+        $objModel = new $modelClass();
         $objModel->tstamp = 0;
 
         // overwrite model with defaults from dca
@@ -319,7 +324,10 @@ class TagsInput extends Widget
 
         // Add an empty option (XHTML) if there are none
         if (empty($this->arrOptions)) {
-            $this->arrOptions = [['value' => '', 'label' => '-']];
+            $this->arrOptions = [[
+                'value' => '',
+                'label' => '-',
+            ]];
         }
 
         // set highlights if not in freeInput mode
@@ -351,7 +359,7 @@ class TagsInput extends Widget
             }
         }
 
-        $this->arrHighlights = array_map(fn($v) => $v !== null, $this->arrHighlights);
+        $this->arrHighlights = array_map(fn ($v) => $v !== null, $this->arrHighlights);
 
         if (!empty($this->arrHighlights)) {
             $this->addAttribute('data-highlight', 1);
@@ -373,7 +381,7 @@ class TagsInput extends Widget
                     json_encode([
                         'action' => static::ACTION_FETCH_REMOTE_OPTIONS,
                         'name' => $this->strId,
-                        'REQUEST_TOKEN' => static::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()
+                        'REQUEST_TOKEN' => static::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
                     ])
                 )
             );
@@ -436,39 +444,36 @@ class TagsInput extends Widget
          * @param array $args
          * @return mixed|null
          */
-        $getConfigByArrayOrCallbackOrFunction = function (array $arr, $property, array $args = [])
-        {
+        $getConfigByArrayOrCallbackOrFunction = function (array $arr, $property, array $args = []) {
             if (isset($arr[$property])) {
                 return $arr[$property];
             }
 
             $callback = $arr[$property . '_callback'] ?? null;
 
-            if (is_array($callback))
-            {
+            if (is_array($callback)) {
                 $instance = Controller::importStatic($callback[0]);
                 return call_user_func_array([$instance, $callback[1]], $args);
             }
 
-            if (is_callable($callback))
-            {
+            if (is_callable($callback)) {
                 return call_user_func_array($callback, $args);
             }
 
             return null;
         };
 
-        if ($this->arrConfiguration['showTagList'] ?? false)
-        {
+        if ($this->arrConfiguration['showTagList'] ?? false) {
             $classCount = $this->arrConfiguration['tagListWeightClassCount'] ?? 6;
 
             $strTagList = "<ul class=\"tt-tag-list\" data-class-count=\"$classCount\">";
 
             if (isset($this->arrConfiguration['option_weights'])
-                || isset($this->arrConfiguration['option_weights_callback']))
-            {
+                || isset($this->arrConfiguration['option_weights_callback'])) {
                 $tagWeights = $getConfigByArrayOrCallbackOrFunction(
-                    (array)$this->arrConfiguration, 'option_weights', [$this->objDca]
+                    (array) $this->arrConfiguration,
+                    'option_weights',
+                    [$this->objDca]
                 );
 
                 $maxCount = 0;
@@ -483,9 +488,7 @@ class TagsInput extends Widget
                     $strTagList .= '<li><a class="' . static::getTagSizeClass($count, $maxCount, $classCount) .
                         '" href="#"><span>' . $strTag . '</span> (' . $count . ')</a></li>';
                 }
-            }
-            else
-            {
+            } else {
                 foreach ($this->arrOptionsAll as $arrTag) {
                     $strTagList .= '<li><a href="#">' . $arrTag['value'] . '</a></li>';
                 }
@@ -519,8 +522,7 @@ class TagsInput extends Widget
 
         // get query options from relation table
         $arrRelationData = $this->getRelationData($this->arrConfiguration['remote']['foreignKey']);
-        if ($arrRelationData !== false)
-        {
+        if ($arrRelationData !== false) {
             return $this->getRemoteOptionsFromRelationTable($strQuery, $arrRelationData);
         }
 
@@ -543,15 +545,15 @@ class TagsInput extends Widget
         $strQueryPattern =
             $this->arrConfiguration['remote']['queryPattern'] ? str_replace('QUERY', $strQuery, $this->arrConfiguration['remote']['queryPattern']) : ('%' . $strQuery . '%');
         $strQueryPattern = str_replace('%', '.*', preg_quote($strQueryPattern, '/'));
-        $intLimit        = $this->arrConfiguration['remote']['limit'] ?: 10;
-        $i               = 0;
+        $intLimit = $this->arrConfiguration['remote']['limit'] ?: 10;
+        $i = 0;
 
         foreach ($this->arrOptions as $arrLocalOption) {
             if (!isset($arrLocalOption['label'])) {
                 continue;
             }
 
-            if (((bool)preg_match("/^{$strQueryPattern}$/i", $arrLocalOption['label'])) === false) {
+            if (((bool) preg_match("/^{$strQueryPattern}$/i", $arrLocalOption['label'])) === false) {
                 continue;
             }
 
@@ -580,26 +582,27 @@ class TagsInput extends Widget
         /** @var class-string<Model> $relModelClass */
         [$relTable, $relField, $relModelClass] = $arrRelationData;
 
-        $strQueryField   = $this->arrConfiguration['remote']['queryField'];
+        $strQueryField = $this->arrConfiguration['remote']['queryField'];
         $strQueryPattern = $this->arrConfiguration['remote']['queryPattern']
             ? str_replace('QUERY', $strQuery, $this->arrConfiguration['remote']['queryPattern'])
             : ('%' . $strQuery . '%');
-        $arrFields       = $this->arrConfiguration['remote']['fields'];
-        $intLimit        = $this->arrConfiguration['remote']['limit'] ?: 10;
+        $arrFields = $this->arrConfiguration['remote']['fields'];
+        $intLimit = $this->arrConfiguration['remote']['limit'] ?: 10;
 
         if (empty($arrFields) || !is_numeric($intLimit) || !$strQueryField) {
             return $options;
         }
 
         /** @var Collection $entities */
-        $entities = $relModelClass::findBy(["$relTable.$strQueryField LIKE ?"], $strQueryPattern, ['limit' => $intLimit]);
+        $entities = $relModelClass::findBy(["$relTable.$strQueryField LIKE ?"], $strQueryPattern, [
+            'limit' => $intLimit,
+        ]);
 
         if ($entities === null) {
             return $options;
         }
 
-        while ($entities->next())
-        {
+        while ($entities->next()) {
             $option = $this->generateOption($entities->id, null, $this->arrConfiguration['remote']['format'], $arrFields, $entities->current());
 
             if ($option === null) {
@@ -635,9 +638,9 @@ class TagsInput extends Widget
             die('Bad Request');
         }
 
-        $strField             = Input::post('name');
+        $strField = Input::post('name');
         $objDca->activeRecord = $objActiveRecord;
-        $arrData              = $GLOBALS['TL_DCA'][$objDca->table]['fields'][$strField];
+        $arrData = $GLOBALS['TL_DCA'][$objDca->table]['fields'][$strField];
 
         if (!is_array($arrData)) {
             $logger = static::getContainer()->get('monolog.logger.contao');
@@ -683,10 +686,8 @@ class TagsInput extends Widget
 
                 // add free input values from $this->varValue
 
-                if (is_array($this->varValue))
-                {
-                    foreach ($this->varValue as $value)
-                    {
+                if (is_array($this->varValue)) {
+                    foreach ($this->varValue as $value) {
                         $arrOption = $this->generateOption($value, $value);
                         if ($arrOption !== null) {
                             $arrChoices[] = $arrOption;
@@ -719,19 +720,16 @@ class TagsInput extends Widget
         $i = is_array($this->varValue) ? count($this->varValue) : 0; // add new values after last varValue index
         $arrSkip = [];
 
-        foreach ($this->arrOptions as $arrDefaultOption)
-        {
+        foreach ($this->arrOptions as $arrDefaultOption) {
             $option = $this->generateOption($arrDefaultOption['value'], $arrDefaultOption['label']);
             if ($option === null) {
                 continue;
             }
 
             // default options should be sorted by given value order if value is set
-            if (!empty($this->varValue) && is_array($this->varValue))
-            {
+            if (!empty($this->varValue) && is_array($this->varValue)) {
                 $pos = array_search($arrDefaultOption['value'], $this->varValue);
-                if ($pos !== false && !in_array($pos, $arrSkip))
-                {
+                if ($pos !== false && !in_array($pos, $arrSkip)) {
                     $arrChoices[$pos] = $option;
                     $arrSkip[] = $pos;
                     continue;
@@ -755,8 +753,7 @@ class TagsInput extends Widget
         $options = [];
         $localValues = [];
 
-        foreach ($this->arrOptions as $localOption)
-        {
+        foreach ($this->arrOptions as $localOption) {
             if (!isset($localOption['value'])) {
                 continue;
             }
@@ -776,12 +773,10 @@ class TagsInput extends Widget
             $options[$pos] = $option;
         }
 
-        if ($this->canInputFree())
-        {
+        if ($this->canInputFree()) {
             $freeValues = array_diff($values, $localValues);
 
-            foreach ($freeValues as $freeValue)
-            {
+            foreach ($freeValues as $freeValue) {
                 // restore postion from arrValues position
                 $pos = array_search($freeValue, $values);
                 if ($pos === false) {
@@ -802,7 +797,6 @@ class TagsInput extends Widget
         return $options;
     }
 
-
     protected function getActiveRemoteOptionsFromRelationTable(array $arrValues, array $arrRelationData)
     {
         $options = [];
@@ -818,8 +812,7 @@ class TagsInput extends Widget
 
         $arrFields = $this->arrConfiguration['remote']['fields'];
 
-        while ($objEntities->next())
-        {
+        while ($objEntities->next()) {
             $arrOption = $this->generateOption(
                 $objEntities->id,
                 null,
@@ -837,7 +830,6 @@ class TagsInput extends Widget
 
         return $options;
     }
-
 
     protected function isValidAjaxActions($strAction): bool
     {
@@ -862,8 +854,7 @@ class TagsInput extends Widget
         $strTable = $arrRelation[0];
         $strField = $arrRelation[1];
 
-        if (preg_match("/^%.*%$/", $strTable))
-        {
+        if (preg_match("/^%.*%$/", $strTable)) {
             $strField = str_replace('%', '', $strTable);
 
             if (!$this->activeRecord->{$strField}) {
@@ -903,12 +894,10 @@ class TagsInput extends Widget
         $strFormat = null,
         array $arrFields = [],
         ?Model $objItem = null
-    ): ?array
-    {
+    ): ?array {
         $arrFieldValues = [];
 
-        if ($strFormat && !empty($arrFields) && $objItem !== null)
-        {
+        if ($strFormat && !empty($arrFields) && $objItem !== null) {
             foreach ($arrFields as $strField) {
                 $arrFieldValues[] = $objItem->{$strField};
             }
@@ -936,8 +925,7 @@ class TagsInput extends Widget
         }
 
         // check option after callback
-        if (!is_array($arrOption) || !isset($arrOption['value']))
-        {
+        if (!is_array($arrOption) || !isset($arrOption['value'])) {
             return null;
         }
 

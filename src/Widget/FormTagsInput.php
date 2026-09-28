@@ -1,11 +1,10 @@
 <?php
+
 /**
  * Contao Open Source CMS
  *
  * Copyright (c) 2024 Heimrich & Hannot GmbH
  *
- * @package tagsinput
- * @author  Rico Kaltofen <r.kaltofen@heimrich-hannot.de>
  * @license http://www.gnu.org/licences/lgpl-3.0.html LGPL
  */
 
@@ -21,14 +20,14 @@ class FormTagsInput extends TagsInput
     /**
      * Submit user input
      *
-     * @var boolean
+     * @var bool
      */
     protected $blnSubmitInput = true;
 
     /**
      * Add a for attribute
      *
-     * @var boolean
+     * @var bool
      */
     protected $blnForAttribute = true;
 
@@ -39,14 +38,12 @@ class FormTagsInput extends TagsInput
      */
     protected $strTemplate = 'form_tagsinput';
 
-
     /**
      * Class
      *
      * @var string
      */
     protected $strClass = 'tagsinput';
-
 
     /**
      * The CSS class prefix
@@ -65,8 +62,7 @@ class FormTagsInput extends TagsInput
     {
         parent::__construct($arrAttributes);
 
-        if (Environment::get('isAjaxRequest'))
-        {
+        if (Environment::get('isAjaxRequest')) {
             if (!$this->objDca instanceof DataContainer) {
                 throw new Exception('DataContainer not set in FormTagsInput');
             }
@@ -102,8 +98,6 @@ class FormTagsInput extends TagsInput
 
     /**
      * Generate the widget and return it as string
-     *
-     * @return string
      */
     public function generate(): string
     {
