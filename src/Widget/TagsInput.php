@@ -22,6 +22,8 @@ use Contao\Widget;
 
 class TagsInput extends Widget
 {
+    public const TYPE = 'tagsinput';
+
     const MODE_LOCAL  = 'local';
     const MODE_REMOTE = 'remote';
 

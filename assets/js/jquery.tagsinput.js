@@ -7,20 +7,46 @@ const jQuery = require('jquery');
         return;
     }
 
+    if (window.contaoTagsInputBackendLoaded) {
+        return;
+    }
+    window.contaoTagsInputBackendLoaded = true;
+
     var TagsInputContaoBackend = {
         config: {
-            selector: 'select.tl_tagsinput, select.tagsinput, input.tl_tagsinput, input.tagsinput',
+            selector: 'select.tl_tagsinput[data-mode], select.tagsinput[data-mode], input.tl_tagsinput[data-mode], input.tagsinput[data-mode]',
         },
-        init: function() {
-            this.setupTagsInput();
-            this.setupTagList();
+        findInputs: function(scope) {
+            return $(scope).find(this.config.selector).addBack(this.config.selector);
         },
-        ajaxComplete: function() {
-            this.setupTagsInput();
-            this.setupTagList();
+        init: function(scope) {
+            this.setupTagsInput(scope || document);
         },
-        setupTagsInput: function() {
-            var $tagInputs = $(this.config.selector);
+        destroy: function(scope) {
+            this.findInputs(scope).each(function() {
+                var $input = $(this);
+                if (!$input.data('tagsinput')) {
+                    return;
+                }
+
+                $input.siblings('.tt-tag-list').find('a').off('.contaoTagsInput');
+                $input.off('.contaoTagsInput');
+
+                var $tagInput = $input.tagsinput('input');
+                $tagInput.off('.contaoTagsInput');
+                $tagInput.typeahead('destroy');
+
+                var sortable = $input.data('tagsinputSortable');
+                if (sortable) {
+                    sortable.destroy();
+                    $input.removeData('tagsinputSortable');
+                }
+
+                $input.tagsinput('destroy');
+            });
+        },
+        setupTagsInput: function(scope) {
+            var $tagInputs = this.findInputs(scope);
 
             $tagInputs.each(function() {
                 var $input = $(this);
@@ -141,7 +167,7 @@ const jQuery = require('jquery');
                 }
 
                 // adding new tags
-                $input.tagsinput('input').on('keydown', function(e) {
+                $input.tagsinput('input').on('keydown.contaoTagsInput', function(e) {
                     // support tab
                     if (e.keyCode == 9) {
                         // add only if value is not empty
@@ -154,13 +180,13 @@ const jQuery = require('jquery');
                 });
 
                 if ($input.data('submitonchange') == '1') {
-                    $input.on('itemAdded', function(e) {
+                    $input.on('itemAdded.contaoTagsInput', function(e) {
                         $input.closest('form').submit();
                     });
                 }
 
                 // leaving input -> clear
-                $input.tagsinput('input').on('blur', function(e) {
+                $input.tagsinput('input').on('blur.contaoTagsInput', function(e) {
                     // add only if value is not empty
                     if (this.value != '' && config.freeInput) {
                         $input.tagsinput('add', {value: this.value, label: this.value, title: this.value});
@@ -171,7 +197,7 @@ const jQuery = require('jquery');
                     }
                 });
 
-                $input.on('itemAdded', function(event) {
+                $input.on('itemAdded.contaoTagsInput', function(event) {
                     // restore tt-input width after adding item
                     if (typeof placeholder === 'undefined' || placeholder.length > 0) {
                         $input.tagsinput('input').val('');
@@ -189,16 +215,10 @@ const jQuery = require('jquery');
                             }
                         },
                     });
+                    $input.data('tagsinputSortable', sortable);
                 }
-            });
-        },
-        setupTagList: function() {
-            var $tagInputs = $(this.config.selector);
 
-            $tagInputs.each(function() {
-                var $input = $(this);
-
-                $input.siblings('.tt-tag-list').find('a').on('click', function(e) {
+                $input.siblings('.tt-tag-list').find('a').on('click.contaoTagsInput', function(e) {
                     var $link = $(this),
                         text = $link.find('span').text(),
                         $bubble = $input.siblings('.tl_select').find('[title="' + text + '"]');
@@ -206,7 +226,7 @@ const jQuery = require('jquery');
                     e.preventDefault();
 
                     if ($bubble.length < 1) {
-                        // add value and simulate pressing tab since typeahead has no function for adding new options programmatically
+                        // Add a value by invoking the same keyboard path as the typeahead input.
                         $input.closest('div').find('.tt-input').trigger('focus').val(text).trigger($.Event('keydown', {keyCode: 9}));
                     }
                     else {
@@ -235,12 +255,28 @@ const jQuery = require('jquery');
     };
 
     $(function() {
-        TagsInputContaoBackend.init();
+        TagsInputContaoBackend.init(document);
+    });
+
+    document.addEventListener('turbo:render', function() {
+        TagsInputContaoBackend.init(document);
+    });
+    document.addEventListener('turbo:frame-render', function(event) {
+        TagsInputContaoBackend.init(event.target);
+    });
+    document.addEventListener('turbo:before-cache', function() {
+        TagsInputContaoBackend.destroy(document);
+    });
+    document.addEventListener('turbo:before-render', function() {
+        TagsInputContaoBackend.destroy(document);
+    });
+    document.addEventListener('turbo:before-frame-render', function(event) {
+        TagsInputContaoBackend.destroy(event.target);
     });
 
     $(document).ajaxComplete(function(event, xhr, settings) {
         if (typeof settings != 'undefined' && !settings.isTagsInputCallback) {
-            TagsInputContaoBackend.ajaxComplete();
+            TagsInputContaoBackend.init(document);
         }
     });
 
@@ -257,7 +293,7 @@ const jQuery = require('jquery');
                 onSuccess: function() {
                     Request.Spy && typeof Request.Spy == 'function' && Request.Spy.apply(this, arguments);
                     orig.onSuccess.apply(this, arguments);
-                    TagsInputContaoBackend.ajaxComplete();
+                    TagsInputContaoBackend.init(document);
                 },
                 onFailure: function() {
                     Request.Spy && typeof Request.Spy == 'function' && Request.Spy.apply(this, arguments);

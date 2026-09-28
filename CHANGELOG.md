@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- Fixed: Backend tag fields work after Turbo navigation and when restoring a cached backend page.
+
 ## [3.0.2] - 2025-11-24
 - Fixed: visual issues on contao 5's dark theme
 - Updated: npm dependencies
