@@ -78,7 +78,7 @@ class FormTagsInput extends TagsInput
     /**
      * Check for a valid option (see #4383)
      */
-    public function validate()
+    public function validate(): void
     {
         // set values from options instead of label
         $varInput = $this->getPost($this->strName);

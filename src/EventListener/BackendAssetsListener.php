@@ -9,11 +9,8 @@ use HeimrichHannot\TagsInput\Widget\TagsInput;
 #[AsHook('initializeSystem')]
 class BackendAssetsListener
 {
-    private ScopeMatcher $scopeMatcher;
-
-    public function __construct(ScopeMatcher $scopeMatcher)
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
     {
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke(): void

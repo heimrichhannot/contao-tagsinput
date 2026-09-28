@@ -35,7 +35,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
      *
      * @throws Exception
      */
-    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
+    public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load('@HeimrichHannotContaoTagsInput/config/services.yaml');
     }

@@ -120,7 +120,7 @@ class TagsInput extends Widget
     /**
      * Check for a valid option (see #4383)
      */
-    public function validate()
+    public function validate(): void
     {
         // set values from options instead of label
         $varInput = $this->getPost($this->strName);
@@ -130,9 +130,7 @@ class TagsInput extends Widget
             $varInput = [$varInput];
         }
 
-        $varInput = array_filter($varInput, function ($value) {
-            return (bool)$value;
-        });
+        $varInput = array_filter($varInput, fn($value) => (bool)$value);
 
         if (!empty($varInput)) {
             // remove duplicates
@@ -353,9 +351,7 @@ class TagsInput extends Widget
             }
         }
 
-        $this->arrHighlights = array_map(function ($v) {
-            return $v !== null;
-        }, $this->arrHighlights);
+        $this->arrHighlights = array_map(fn($v) => $v !== null, $this->arrHighlights);
 
         if (!empty($this->arrHighlights)) {
             $this->addAttribute('data-highlight', 1);
@@ -388,7 +384,7 @@ class TagsInput extends Widget
         }
     }
 
-    public static function loadAssets()
+    public static function loadAssets(): void
     {
         $bundle = 'bundles/heimrichhannotcontaotagsinput';
 
@@ -582,7 +578,7 @@ class TagsInput extends Widget
         $options = [];
 
         /** @var class-string<Model> $relModelClass */
-        list($relTable, $relField, $relModelClass) = $arrRelationData;
+        [$relTable, $relField, $relModelClass] = $arrRelationData;
 
         $strQueryField   = $this->arrConfiguration['remote']['queryField'];
         $strQueryPattern = $this->arrConfiguration['remote']['queryPattern']
@@ -618,7 +614,7 @@ class TagsInput extends Widget
         return $options;
     }
 
-    public function generateAjax($strAction, DataContainer $objDca)
+    public function generateAjax($strAction, DataContainer $objDca): void
     {
         // no tagsinput action --> return
         if (!$this->isValidAjaxActions($strAction)) {
@@ -811,7 +807,7 @@ class TagsInput extends Widget
     {
         $options = [];
 
-        list($relTable, $relField, $relModelClass) = $arrRelationData;
+        [$relTable, $relField, $relModelClass] = $arrRelationData;
 
         /** @var Collection $objEntities */
         $objEntities = $relModelClass::findMultipleByIds($arrValues);
