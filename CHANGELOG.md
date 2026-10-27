@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [3.1.0] - 2026-10-27
 - Changed: require at least php 8.1
 - Fixed: Backend tag fields work after Turbo navigation and when restoring a cached backend page.
 
