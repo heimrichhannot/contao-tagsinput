@@ -5,18 +5,22 @@ namespace HeimrichHannot\TagsInput\EventListener;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use HeimrichHannot\TagsInput\Widget\TagsInput;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[AsHook('initializeSystem')]
 class BackendAssetsListener
 {
     public function __construct(
-        private readonly ScopeMatcher $scopeMatcher
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack
     ) {
     }
 
     public function __invoke(): void
     {
-        if (!$this->scopeMatcher->isBackendRequest()) {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request === null || !$this->scopeMatcher->isBackendRequest($request)) {
             return;
         }
 

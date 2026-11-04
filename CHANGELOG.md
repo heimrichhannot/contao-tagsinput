@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+## [3.1.1] - 2026-11-04
+
+- Fixed: Restore compatibility with Contao 4.13 when initializing backend pages or running console commands.
+- Fixed: Restore automated quality checks for the development dependencies.
+- Added: Automated compatibility checks for Contao 4.13, 5.3 and 5.7.
+
 ## [3.1.0] - 2026-10-27
 - Changed: require at least php 8.1
 - Fixed: Backend tag fields work after Turbo navigation and when restoring a cached backend page.
