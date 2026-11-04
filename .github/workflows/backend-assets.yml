@@ -29,9 +29,9 @@ jobs:
         run: |
           mkdir -p /tmp/tagsinput-test-deps
           php -r 'file_put_contents("/tmp/tagsinput-test-deps/composer.json", json_encode(["require" => ["contao/core-bundle" => getenv("CONTAO_VERSION")]]));'
-          # Allow the legacy core only in this isolated compatibility fixture; keep audit reporting.
+          # Allow the legacy core and its required SVG sanitizer only in this isolated fixture; keep audit reporting.
           if [ "$CONTAO_VERSION" = '~4.13.0' ]; then
-            composer config --working-dir=/tmp/tagsinput-test-deps --json policy.advisories.ignore '{"contao/core-bundle":{"constraint":"~4.13.0","on-audit":false,"reason":"Legacy compatibility test only; no application is booted."}}'
+            composer config --working-dir=/tmp/tagsinput-test-deps --json policy.advisories.ignore '{"contao/core-bundle":{"constraint":"~4.13.0","on-audit":false,"reason":"Legacy compatibility test only; no application is booted."},"enshrined/svg-sanitize":{"constraint":"^0.22","on-audit":false,"reason":"Required by legacy Contao 4.13; unused by this compatibility test."}}'
           fi
           composer update --working-dir=/tmp/tagsinput-test-deps --no-interaction --no-plugins --no-scripts --prefer-dist
       - name: Test backend asset registration
