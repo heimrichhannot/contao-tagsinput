@@ -1,0 +1,32 @@
+name: Backend assets compatibility
+
+on: [push, pull_request]
+
+jobs:
+  backend-assets:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - php: '8.1'
+            contao: '~4.13.0'
+          - php: '8.1'
+            contao: '~5.3.0'
+          - php: '8.3'
+            contao: '~5.7.0'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, fileinfo, filter, gd, intl, mbstring, pdo_mysql
+          coverage: none
+      - name: Install isolated framework dependencies
+        env:
+          CONTAO_VERSION: ${{ matrix.contao }}
+        run: |
+          mkdir -p /tmp/tagsinput-test-deps
+          php -r 'file_put_contents("/tmp/tagsinput-test-deps/composer.json", json_encode(["require" => ["contao/core-bundle" => getenv("CONTAO_VERSION")]]));'
+          composer update --working-dir=/tmp/tagsinput-test-deps --no-interaction --no-plugins --no-scripts --prefer-dist
+      - name: Test backend asset registration
+        run: php tests/backend-assets.php /tmp/tagsinput-test-deps/vendor/autoload.php
