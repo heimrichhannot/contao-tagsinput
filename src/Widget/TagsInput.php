@@ -223,8 +223,6 @@ class TagsInput extends Widget
         return $values;
     }
 
-    /**
-     */
     protected function addNewTag(string $tag): ?int
     {
         if ($tag == '') {
